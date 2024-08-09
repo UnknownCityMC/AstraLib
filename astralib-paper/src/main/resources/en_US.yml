@@ -1,0 +1,6 @@
+prefix: "[<gradient:#ff3b62:#ac30ff>AstraLib</gradient>] "
+command:
+  language:
+    invalid-lang: "<prefix><#ebff91><lang> <#ff4763>is an invalid language!"
+    success: "<prefix><#54ff65>Your language got changed to <#ebff91><lang>"
+    info: "<prefix><#54ff65>Your current language is <#ebff91><lang>"

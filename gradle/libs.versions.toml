@@ -1,0 +1,63 @@
+[versions]
+
+# Gradle Plugins
+shadow = "8.1.7"
+pluginyml = "0.6.0"
+
+# Paper
+paper-api = "1.21-R0.1-SNAPSHOT"
+
+# Config
+configurate = "4.1.2"
+jackson = "2.17.0"
+adventure = "4.15.0"
+papi = "2.11.5"
+
+# Commands
+cloud-core = "2.0.0-rc.2"
+cloud-paper = "2.0.0-beta.9"
+cloud-minecraft-extras = "2.0.0-beta.9"
+
+# Storage
+redis = "5.1.0"
+sadu = "2.2.2"
+
+# Testing
+junit = "2.11.5"
+
+[libraries]
+
+# Paper
+paper-api = { group = "io.papermc.paper", name = "paper-api", version.ref = "paper-api" }
+
+# Config
+configurate-yaml = { group = "org.spongepowered", name = "configurate-yaml", version.ref = "configurate" }
+configurate-hocon = { group = "org.spongepowered", name = "configurate-hocon", version.ref = "configurate" }
+
+jackson-toml = { group = "com.fasterxml.jackson.dataformat", name = "jackson-dataformat-toml", version.ref = "jackson"}
+
+adventure-api = { group = "net.kyori", name = "adventure-api", version.ref = "adventure" }
+adventure-text-minimessage = { group = "net.kyori", name = "adventure-text-minimessage", version.ref = "adventure" }
+papi = { group = "me.clip", name = "placeholderapi", version.ref = "papi" }
+
+# Commands
+cloud-core = { group = "org.incendo", name = "cloud-core", version.ref = "cloud-core" }
+cloud-paper = { group = "org.incendo", name = "cloud-paper", version.ref = "cloud-paper" }
+cloud-extras = { group = "org.incendo", name = "cloud-minecraft-extras", version.ref = "cloud-minecraft-extras" }
+
+# Storage
+redis = { group = "redis.clients", name = "jedis", version.ref = "redis" }
+sadu-queries = { group = "de.chojo.sadu", name = "sadu-queries", version.ref = "sadu" }
+sadu-datasource = { group = "de.chojo.sadu", name = "sadu-datasource", version.ref = "sadu" }
+sadu-mysql = { group = "de.chojo.sadu", name = "sadu-mysql", version.ref = "sadu" }
+sadu-mariadb = { group = "de.chojo.sadu", name = "sadu-mariadb", version.ref = "sadu" }
+sadu-postgresql = { group = "de.chojo.sadu", name = "sadu-postgresql", version.ref = "sadu" }
+sadu-sqlite = { group = "de.chojo.sadu", name = "sadu-sqlite", version.ref = "sadu" }
+
+# Testing
+# junit = { group = "", name = "", version.ref = "junit" }
+
+[plugins]
+shadow = { id = "io.github.goooler.shadow", version.ref = "shadow" }
+pluginyml = { id = "net.minecrell.plugin-yml.bukkit", version.ref = "pluginyml"}
+
