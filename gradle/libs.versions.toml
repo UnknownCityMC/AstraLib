@@ -9,7 +9,6 @@ paper-api = "1.21-R0.1-SNAPSHOT"
 
 # Config
 configurate = "4.1.2"
-jackson = "2.17.0"
 adventure = "4.15.0"
 papi = "2.11.5"
 
@@ -33,8 +32,6 @@ paper-api = { group = "io.papermc.paper", name = "paper-api", version.ref = "pap
 # Config
 configurate-yaml = { group = "org.spongepowered", name = "configurate-yaml", version.ref = "configurate" }
 configurate-hocon = { group = "org.spongepowered", name = "configurate-hocon", version.ref = "configurate" }
-
-jackson-toml = { group = "com.fasterxml.jackson.dataformat", name = "jackson-dataformat-toml", version.ref = "jackson"}
 
 adventure-api = { group = "net.kyori", name = "adventure-api", version.ref = "adventure" }
 adventure-text-minimessage = { group = "net.kyori", name = "adventure-text-minimessage", version.ref = "adventure" }

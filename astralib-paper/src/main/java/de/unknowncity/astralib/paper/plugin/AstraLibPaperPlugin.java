@@ -7,6 +7,7 @@ import de.unknowncity.astralib.common.database.DataBaseProvider;
 import de.unknowncity.astralib.common.database.DataBaseUpdater;
 import de.unknowncity.astralib.common.message.lang.Localization;
 import de.unknowncity.astralib.paper.api.hook.defaulthooks.PlaceholderApiHook;
+import de.unknowncity.astralib.paper.api.lib.AstraLibPaper;
 import de.unknowncity.astralib.paper.api.message.PaperMessenger;
 import de.unknowncity.astralib.paper.api.plugin.PaperAstraPlugin;
 import de.unknowncity.astralib.paper.plugin.command.LanguageCommand;
@@ -71,6 +72,8 @@ public class AstraLibPaperPlugin extends PaperAstraPlugin {
         initializeMessenger();
         initializeCommandManager(messenger, languageService);
         new LanguageCommand(this).apply(commandManager);
+
+        AstraLibPaper.setAstraLibPlugin(this);
     }
 
     public void registerHooks() {
@@ -86,7 +89,7 @@ public class AstraLibPaperPlugin extends PaperAstraPlugin {
 
         var dataBaseUpdater = new DataBaseUpdater(dataSource, databaseSettings);
         try {
-            dataBaseUpdater.update();
+            dataBaseUpdater.update(getClassLoader());
         } catch (IOException | SQLException e) {
             this.getLogger().log(Level.SEVERE, "Failed to update database", e);
             this.getServer().getPluginManager().disablePlugin(this);

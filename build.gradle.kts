@@ -1,12 +1,12 @@
 plugins {
     `maven-publish`
     `java-library`
-
+    alias(libs.plugins.shadow)
     id("java")
 }
 
 group = "de.unknowncity.astralib"
-version = "0.1.0"
+version = "0.2.0"
 
 dependencies {
     testImplementation(platform("org.junit:junit-bom:5.10.3"))

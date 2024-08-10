@@ -20,22 +20,26 @@ public class DataBaseUpdater {
         this.dataBaseSettings = dataBaseSettings;
     }
 
-    public void update() throws IOException, SQLException {
+    public void update(ClassLoader classLoader) throws IOException, SQLException {
         switch (dataBaseSettings.dataBaseDriver()) {
             case MARIADB -> SqlUpdater.builder(dataSource, MariaDb.get())
                     .setVersionTable("version")
+                    .withClassLoader(classLoader)
                     .execute();
 
             case MYSQL -> SqlUpdater.builder(dataSource, MySql.get())
                     .setVersionTable("version")
+                    .withClassLoader(classLoader)
                     .execute();
 
             case POSTGRESQL -> SqlUpdater.builder(dataSource, PostgreSql.get())
                     .setVersionTable("version")
+                    .withClassLoader(classLoader)
                     .execute();
 
             default -> SqlUpdater.builder(dataSource, SqLite.get())
                     .setVersionTable("version")
+                    .withClassLoader(classLoader)
                     .execute();
         }
     }
