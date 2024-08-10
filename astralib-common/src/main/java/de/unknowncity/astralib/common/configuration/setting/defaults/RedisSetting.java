@@ -7,6 +7,9 @@ public class RedisSetting implements Setting {
     private int port = 11;
     private String password = "dwarf_secret";
 
+    public RedisSetting() {
+
+    }
 
     public RedisSetting(String host, int port, String password) {
         this.host = host;
