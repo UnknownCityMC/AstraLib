@@ -1,9 +1,7 @@
 package de.unknowncity.astralib.common.configuration.setting.defaults;
 
-import de.unknowncity.astralib.common.configuration.annotation.ConfigSetting;
 import de.unknowncity.astralib.common.configuration.setting.Setting;
 
-@ConfigSetting(key = "redis")
 public class RedisSetting implements Setting {
     private String host = "localhost";
     private int port = 11;

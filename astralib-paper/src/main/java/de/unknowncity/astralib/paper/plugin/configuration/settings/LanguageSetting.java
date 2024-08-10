@@ -1,10 +1,8 @@
 package de.unknowncity.astralib.paper.plugin.configuration.settings;
 
-import de.unknowncity.astralib.common.configuration.annotation.ConfigSetting;
 import de.unknowncity.astralib.common.configuration.setting.Setting;
 import de.unknowncity.astralib.common.message.lang.Language;
 
-@ConfigSetting(key = "language")
 public class LanguageSetting implements Setting {
 
         private Language defaultLanguage = Language.ENGLISH;

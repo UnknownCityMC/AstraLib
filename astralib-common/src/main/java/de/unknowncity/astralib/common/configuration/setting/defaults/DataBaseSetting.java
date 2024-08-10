@@ -1,12 +1,10 @@
 package de.unknowncity.astralib.common.configuration.setting.defaults;
 
-import de.unknowncity.astralib.common.configuration.annotation.ConfigSetting;
 import de.unknowncity.astralib.common.configuration.setting.Setting;
 import de.unknowncity.astralib.common.database.DataBaseDriver;
 
 import java.nio.file.Path;
 
-@ConfigSetting(key = "database")
 public class DataBaseSetting implements Setting {
     private DataBaseDriver dataBaseDriver = DataBaseDriver.MARIADB;
     private String host = "localhost";
