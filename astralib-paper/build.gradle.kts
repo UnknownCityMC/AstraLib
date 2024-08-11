@@ -43,8 +43,7 @@ tasks {
     shadowJar {
         archiveVersion.set(rootProject.version.toString())
         archiveBaseName.set("AstraLib")
-        archiveAppendix.set("paper")
-        archiveClassifier.set("")
+        archiveClassifier.set("paper")
     }
 }
 
@@ -67,10 +66,6 @@ bukkit {
     softDepend = listOf("PlaceholderAPI")
 
     defaultPermission = BukkitPluginDescription.Permission.Default.OP
-
-    libs {
-
-    }
 }
 
 

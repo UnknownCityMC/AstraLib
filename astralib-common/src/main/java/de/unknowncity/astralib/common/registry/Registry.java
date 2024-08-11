@@ -48,7 +48,7 @@ public abstract class Registry<I, T extends Registrable<I>> {
      * @param registrableClass the type of the registrable
      * @return the registrable if present, else empty
      */
-    public T getRegistered(Class<? extends T> registrableClass) {
+    public <R extends T> R getRegistered(Class<R> registrableClass) {
         var possibleSetting = registered.stream().filter(registrableClass::isInstance).findFirst();
 
         return (possibleSetting.map(registrableClass::cast).orElse(null));
