@@ -1,16 +1,16 @@
 package de.unknowncity.astralib.paper.api.lib;
 
-import de.unknowncity.astralib.paper.api.plugin.PaperAstraPlugin;
+import de.unknowncity.astralib.paper.plugin.AstraLibPaperPlugin;
 
 public class AstraLibPaper {
-    private static PaperAstraPlugin plugin;
+    private static AstraLibPaperPlugin plugin;
 
 
-    public static PaperAstraPlugin getAstraLibPlugin() {
+    public static AstraLibPaperPlugin getAstraLibPlugin() {
         return plugin;
     }
 
-    public static void setAstraLibPlugin(PaperAstraPlugin astraLibPlugin) {
+    public static void setAstraLibPlugin(AstraLibPaperPlugin astraLibPlugin) {
         plugin = astraLibPlugin;
     }
 }

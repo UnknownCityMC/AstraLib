@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "de.unknowncity.astralib"
-version = "0.2.2"
+version = "0.3.0-SNAPSHOT"
 
 dependencies {
     testImplementation(platform("org.junit:junit-bom:5.10.3"))
