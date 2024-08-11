@@ -33,8 +33,12 @@ public class LanguageService implements AstraLanguageService<Player> {
     }
 
     public void setPlayerLanguage(Player player, Language language) {
+        if (languageCache.containsKey(player.getUniqueId())) {
+            languageDao.update(player.getUniqueId(), language);
+        } else {
+            languageDao.write(player.getUniqueId(), language);
+        }
         languageCache.put(player.getUniqueId(), language);
-        languageDao.write(player.getUniqueId(), language);
     }
 
     @Override
@@ -43,6 +47,9 @@ public class LanguageService implements AstraLanguageService<Player> {
     }
 
     public void loadPlayerInCache(UUID uuid) {
+        if (languageCache.containsKey(uuid)) {
+            return;
+        }
         // Load language in cache
         languageDao.read(uuid).thenAcceptAsync(language -> {
             if (language.isPresent()) {

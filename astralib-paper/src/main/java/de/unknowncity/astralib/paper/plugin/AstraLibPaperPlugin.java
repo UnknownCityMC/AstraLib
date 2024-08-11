@@ -17,6 +17,7 @@ import de.unknowncity.astralib.paper.plugin.configuration.serializer.LanguageSet
 import de.unknowncity.astralib.paper.plugin.configuration.settings.LanguageSetting;
 import de.unknowncity.astralib.paper.plugin.database.DataBaseButler;
 import de.unknowncity.astralib.paper.plugin.database.service.LanguageService;
+import de.unknowncity.astralib.paper.plugin.listener.PlayerJoinListener;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -72,6 +73,8 @@ public class AstraLibPaperPlugin extends PaperAstraPlugin {
         initializeMessenger();
         initializeCommandManager(messenger, languageService);
         new LanguageCommand(this).apply(commandManager);
+
+        getServer().getPluginManager().registerEvents(new PlayerJoinListener(this), this);
 
         AstraLibPaper.setAstraLibPlugin(this);
     }
