@@ -43,6 +43,7 @@ tasks {
     shadowJar {
         archiveVersion.set(rootProject.version.toString())
         archiveBaseName.set("AstraLib-Paper")
+        archiveClassifier.set("")
     }
 }
 
