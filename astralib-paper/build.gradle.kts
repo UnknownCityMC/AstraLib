@@ -42,8 +42,7 @@ dependencies {
 tasks {
     shadowJar {
         archiveVersion.set(rootProject.version.toString())
-        archiveBaseName.set("AstraLib")
-        archiveClassifier.set("paper")
+        archiveBaseName.set("AstraLib-Paper")
     }
 }
 
@@ -84,9 +83,8 @@ publishing {
 
     publications {
         register<MavenPublication>("maven") {
-            from(components["java"])
+            artifact(tasks["shadowJar"])
             group = rootProject.group
-            artifactId = "astralib-paper"
             version = rootProject.version.toString()
         }
     }
