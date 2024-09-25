@@ -5,12 +5,14 @@ import de.unknowncity.astralib.common.configuration.AstraConfigurationLoader;
 import de.unknowncity.astralib.common.hook.HookRegistry;
 import de.unknowncity.astralib.common.message.lang.Language;
 import de.unknowncity.astralib.common.plugin.AstraPlugin;
+import de.unknowncity.astralib.common.service.AstraLanguageService;
 import de.unknowncity.astralib.common.service.ServiceRegistry;
 import de.unknowncity.astralib.paper.api.command.sender.PaperCommandSource;
 import de.unknowncity.astralib.paper.api.command.sender.PaperPlayerCommandSource;
 import de.unknowncity.astralib.paper.api.hook.PaperPluginHook;
+import de.unknowncity.astralib.paper.api.hook.defaulthooks.PlaceholderApiHook;
 import de.unknowncity.astralib.paper.api.message.PaperMessenger;
-import de.unknowncity.astralib.paper.plugin.database.service.LanguageService;
+import de.unknowncity.astralib.paper.plugin.AstraLibPaperPlugin;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -22,6 +24,7 @@ import org.incendo.cloud.caption.CaptionRegistry;
 import org.incendo.cloud.caption.StandardCaptionKeys;
 import org.incendo.cloud.execution.ExecutionCoordinator;
 import org.incendo.cloud.paper.PaperCommandManager;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.configurate.NodePath;
 
@@ -30,11 +33,14 @@ import java.util.logging.Level;
 
 public class PaperAstraPlugin extends JavaPlugin implements AstraPlugin<CommandSender, Player> {
     protected PaperCommandManager<PaperCommandSource> commandManager;
+    protected CommandRegistry<CommandSender, Player, PaperAstraPlugin> commandRegistry;
+
     protected ServiceRegistry<PaperAstraPlugin> serviceRegistry;
     protected CaptionRegistry<PaperCommandSource> captionRegistry;
     protected HookRegistry<Server, PaperAstraPlugin, PaperPluginHook> hookRegistry;
-    protected CommandRegistry<CommandSender, Player, PaperAstraPlugin> commandRegistry;
+
     protected AstraConfigurationLoader configLoader;
+    protected AstraLanguageService<Player> languageService;
     protected Language defaultLanguage = Language.GERMAN;
 
     public static final String ASTRA_LIB_MAIN_CONFIG_NAME = "astraconfig.yml";
@@ -44,12 +50,22 @@ public class PaperAstraPlugin extends JavaPlugin implements AstraPlugin<CommandS
     public void onEnable() {
         this.configLoader = new AstraConfigurationLoader(getLogger());
         this.hookRegistry = new HookRegistry<>(this);
+
+        registerDefaultHooks();
+
         this.serviceRegistry = new ServiceRegistry<>(this);
 
+        var astraLibPaperPlugin = getPlugin(AstraLibPaperPlugin.class);
+        this.languageService = astraLibPaperPlugin.languageService();
+
+        initializeCommandManager(astraLibPaperPlugin.messenger());
+
+        // Plugin exclusive logic starts here
         onPluginEnable();
     }
 
-    public void initializeCommandManager(PaperMessenger messenger, LanguageService languageService) {
+    @ApiStatus.Internal
+    public void initializeCommandManager(PaperMessenger messenger) {
         try {
             this.commandManager = PaperCommandManager.builder(SenderMapper.create(
                     commandSourceStack -> commandSourceStack.getSender() instanceof Player ?
@@ -70,49 +86,53 @@ public class PaperAstraPlugin extends JavaPlugin implements AstraPlugin<CommandS
 
         captionRegistry.registerProvider(
                 CaptionProvider.forCaption(StandardCaptionKeys.ARGUMENT_PARSE_FAILURE_CHAR,
-                        sender -> messenger.getString(sender instanceof Player player ? languageService.getPlayerLanguage(player) : Language.ENGLISH,
+                        sender ->  messenger.getString(sender instanceof Player player ? player : null,
                                 NodePath.path("exception", "argument-parse", "char")))
         );
         captionRegistry.registerProvider(
                 CaptionProvider.forCaption(StandardCaptionKeys.ARGUMENT_PARSE_FAILURE_COLOR,
-                        sender -> messenger.getString(sender instanceof Player player ? languageService.getPlayerLanguage(player) : Language.ENGLISH,
+                        sender -> messenger.getString(sender instanceof Player player ? player : null,
                                 NodePath.path("exception", "argument-parse", "color")))
         );
         captionRegistry.registerProvider(
                 CaptionProvider.forCaption(StandardCaptionKeys.ARGUMENT_PARSE_FAILURE_DURATION,
-                        sender -> messenger.getString(sender instanceof Player player ? languageService.getPlayerLanguage(player) : Language.ENGLISH,
+                        sender -> messenger.getString(sender instanceof Player player ? player : null,
                                 NodePath.path("exception", "argument-parse", "duration")))
         );
         captionRegistry.registerProvider(
                 CaptionProvider.forCaption(StandardCaptionKeys.ARGUMENT_PARSE_FAILURE_ENUM,
-                        sender -> messenger.getString(sender instanceof Player player ? languageService.getPlayerLanguage(player) : Language.ENGLISH,
+                        sender -> messenger.getString(sender instanceof Player player ? player : null,
                                 NodePath.path("exception", "argument-parse", "enum")))
         );
         captionRegistry.registerProvider(
                 CaptionProvider.forCaption(StandardCaptionKeys.ARGUMENT_PARSE_FAILURE_NUMBER,
-                        sender -> messenger.getString(sender instanceof Player player ? languageService.getPlayerLanguage(player) : Language.ENGLISH,
+                        sender -> messenger.getString(sender instanceof Player player ? player : null,
                                 NodePath.path("exception", "argument-parse", "number")))
         );
         captionRegistry.registerProvider(
                 CaptionProvider.forCaption(StandardCaptionKeys.ARGUMENT_PARSE_FAILURE_STRING,
-                        sender -> messenger.getString(sender instanceof Player player ? languageService.getPlayerLanguage(player) : Language.ENGLISH,
+                        sender -> messenger.getString(sender instanceof Player player ? player : null,
                                 NodePath.path("exception", "argument-parse", "string")))
         );
         captionRegistry.registerProvider(
                 CaptionProvider.forCaption(StandardCaptionKeys.ARGUMENT_PARSE_FAILURE_REGEX,
-                        sender -> messenger.getString(sender instanceof Player player ? languageService.getPlayerLanguage(player) : Language.ENGLISH,
+                        sender -> messenger.getString(sender instanceof Player player ? player : null,
                                 NodePath.path("exception", "argument-parse", "regex")))
         );
         captionRegistry.registerProvider(
                 CaptionProvider.forCaption(StandardCaptionKeys.ARGUMENT_PARSE_FAILURE_UUID,
-                        sender -> messenger.getString(sender instanceof Player player ? languageService.getPlayerLanguage(player) : Language.ENGLISH,
+                        sender -> messenger.getString(sender instanceof Player player ? player : null,
                                 NodePath.path("exception", "argument-parse", "uuid")))
         );
         captionRegistry.registerProvider(
                 CaptionProvider.forCaption(StandardCaptionKeys.ARGUMENT_PARSE_FAILURE_BOOLEAN,
-                        sender -> messenger.getString(sender instanceof Player player ? languageService.getPlayerLanguage(player) : Language.ENGLISH,
+                        sender -> messenger.getString(sender instanceof Player player ? player : null,
                                 NodePath.path("exception", "argument-parse", "boolean")))
         );
+    }
+
+    private void registerDefaultHooks() {
+        hookRegistry.register(new PlaceholderApiHook(getServer()));
     }
 
     @Override

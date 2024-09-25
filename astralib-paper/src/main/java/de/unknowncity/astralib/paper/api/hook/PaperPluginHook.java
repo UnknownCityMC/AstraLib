@@ -6,12 +6,12 @@ import org.bukkit.Server;
 
 public class PaperPluginHook extends PluginHook<Server, PaperAstraPlugin> {
 
-    public PaperPluginHook(String identifier) {
-        super(identifier);
+    public PaperPluginHook(String identifier, Server server) {
+        super(identifier, server);
     }
 
     @Override
-    public boolean isAvailable(Server server) {
+    public boolean isAvailable() {
         return server.getPluginManager().isPluginEnabled(identifier);
     }
 

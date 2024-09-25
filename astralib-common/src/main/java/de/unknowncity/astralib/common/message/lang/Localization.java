@@ -21,16 +21,45 @@ public class Localization {
         this.languageFileFolder = languageFileFolder;
     }
 
-    public void loadLanguageFiles(Logger logger) {
+    public static Builder builder(Path languageFileFolder) {
+        return new Builder(languageFileFolder);
+    }
+
+    public static class Builder {
+        private final Path languagePath;
+        private Logger logger;
+
+        public Builder(Path languageFileFolder) {
+            this.languagePath = languageFileFolder;
+        }
+
+        public Builder withLogger(Logger logger) {
+            this.logger = logger;
+            return this;
+        }
+
+        public Localization buildAndLoad() {
+            var localization = new Localization(languagePath);
+            localization.loadLanguageFiles(logger);
+            return localization;
+        }
+    }
+
+    private void loadLanguageFiles(Logger logger) {
         var fileNames = languageFileFolder.toFile().list();
 
         if (fileNames == null) {
+            if (logger == null) {
+                return;
+            }
             logger.warning("No language files found!");
             return;
         }
 
         Arrays.stream(fileNames).filter(fileName -> fileName.endsWith(".yml")).forEach(fileName -> {
-            logger.info("Found language file: '" + fileName + "'");
+            if (logger != null) {
+                logger.info("Found language file: '" + fileName + "'");
+            }
 
             loadLanguageFile(logger, fileName);
         });
@@ -45,7 +74,9 @@ public class Localization {
             var language = new Language(fileName.replace(".yml", ""));
             languageConfigurationNodes.put(language, configurationNode);
         } catch (ConfigurateException e) {
-            logger.log(Level.WARNING, "Faild to load language file: '" + fileName + "'", e);
+            if (logger != null) {
+                logger.log(Level.WARNING, "Faild to load language file: '" + fileName + "'", e);
+            }
         }
     }
 

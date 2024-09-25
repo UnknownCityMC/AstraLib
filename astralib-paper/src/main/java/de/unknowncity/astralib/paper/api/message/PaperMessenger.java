@@ -4,12 +4,15 @@ import de.unknowncity.astralib.common.service.AstraLanguageService;
 import de.unknowncity.astralib.common.message.Messenger;
 import de.unknowncity.astralib.common.message.lang.Language;
 import de.unknowncity.astralib.common.message.lang.Localization;
+import de.unknowncity.astralib.common.service.FallbackLanguageService;
+import de.unknowncity.astralib.paper.api.hook.defaulthooks.PlaceholderApiHook;
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.kyori.adventure.title.Title;
+import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.spongepowered.configurate.NodePath;
@@ -25,12 +28,49 @@ public class PaperMessenger implements Messenger<CommandSender, Player> {
     private final MiniMessage miniMessage;
     private final boolean papiAvailable;
 
-    public PaperMessenger(Localization localization, Language defaultLanguage, AstraLanguageService<Player> languageService, boolean papiAvailable) {
+    private PaperMessenger(Localization localization, Language defaultLanguage, AstraLanguageService<Player> languageService, boolean papiAvailable) {
         this.localization = localization;
         this.defaultLanguage = defaultLanguage;
         this.languageService = languageService;
         this.miniMessage = MiniMessage.miniMessage();
         this.papiAvailable = papiAvailable;
+    }
+
+    public static Builder builder(Localization localization) {
+        return new PaperMessenger.Builder(localization);
+    }
+
+    public static class Builder {
+        public final Localization localization;
+        private AstraLanguageService<Player> languageService = null;
+        private Language defaultLanguage = Language.ENGLISH;
+        private boolean papiAvailable = false;
+
+        public Builder(Localization localization) {
+            this.localization = localization;
+        }
+
+        public Builder withDefaultLanguage(Language defaultLanguage) {
+            Builder.this.defaultLanguage = defaultLanguage;
+            return Builder.this;
+        }
+
+        public Builder withLanguageService(AstraLanguageService<Player> languageService) {
+            Builder.this.languageService = languageService;
+            return Builder.this;
+        }
+
+        public Builder withPlaceHolderAPI(PlaceholderApiHook placeholderApiHook) {
+            Builder.this.papiAvailable = placeholderApiHook.isAvailable();
+            return Builder.this;
+        }
+
+        public PaperMessenger build() {
+            if (languageService == null) {
+                languageService = FallbackLanguageService.create(defaultLanguage);
+            }
+            return new PaperMessenger(localization, defaultLanguage, languageService, papiAvailable);
+        }
     }
 
     public Component prefix() {
@@ -45,17 +85,22 @@ public class PaperMessenger implements Messenger<CommandSender, Player> {
 
     @Override
     public String getStringOrNotAvailable(Language language, NodePath path) {
-        return getString(language, path) == null ? notAvailable(path) : getString(language, path);
+        return getString(language != null ? language : defaultLanguage, path) == null ? notAvailable(path) : getString(language, path);
     }
 
     @Override
     public String getString(Language language, NodePath path) {
+        return localization.langNode(language != null ? language : defaultLanguage).node(path).getString();
+    }
+
+    public String getString(Player player, NodePath path) {
+        var language = player == null ? defaultLanguage : languageService.getPlayerLanguage(player);
         return localization.langNode(language).node(path).getString();
     }
 
     @Override
     public Component componentFromList(Language language, NodePath path, Player player, TagResolver... resolvers) {
-        var componentList = componentList(language, path, player, resolvers);
+        var componentList = componentList(language != null ? language : defaultLanguage, path, player, resolvers);
         var component = Component.text();
         componentList.forEach(comp -> component.append(comp).appendNewline());
 
@@ -64,14 +109,14 @@ public class PaperMessenger implements Messenger<CommandSender, Player> {
 
     @Override
     public Component componentFromList(Language language, NodePath path, TagResolver... resolvers) {
-        return componentFromList(language, path, null, resolvers);
+        return componentFromList(language != null ? language : defaultLanguage, path, null, resolvers);
     }
 
     @Override
     public List<Component> componentList(Language language, NodePath path, Player player, TagResolver... resolvers) {
         List<String> messageStringList;
         try {
-            messageStringList = localization.langNode(language).node(path).getList(String.class);
+            messageStringList = localization.langNode(language != null ? language : defaultLanguage).node(path).getList(String.class);
         } catch (SerializationException e) {
             return List.of(Component.text(notAvailable(path)));
         }
@@ -94,7 +139,7 @@ public class PaperMessenger implements Messenger<CommandSender, Player> {
 
     @Override
     public Component component(Language language, NodePath path, Player player, TagResolver... resolvers) {
-        var messageString = getStringOrNotAvailable(language, path);
+        var messageString = getStringOrNotAvailable(language != null ? language : defaultLanguage, path);
 
         var papiParsedString = papiAvailable && player != null ? PlaceholderAPI.setPlaceholders(player, messageString) : messageString;
         return miniMessage.deserialize(
@@ -106,7 +151,7 @@ public class PaperMessenger implements Messenger<CommandSender, Player> {
 
     @Override
     public Component component(Language language, NodePath path, TagResolver... resolvers) {
-        return component(language, path, null, resolvers);
+        return component(language != null ? language : defaultLanguage, path, null, resolvers);
     }
 
     @Override

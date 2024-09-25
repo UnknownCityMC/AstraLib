@@ -7,7 +7,6 @@ import de.chojo.sadu.mysql.databases.MySql;
 import de.chojo.sadu.postgresql.databases.PostgreSql;
 import de.chojo.sadu.queries.api.configuration.QueryConfiguration;
 import de.chojo.sadu.sqlite.databases.SqLite;
-import de.unknowncity.astralib.common.configuration.AstraConfiguration;
 import de.unknowncity.astralib.common.configuration.setting.defaults.DataBaseSetting;
 
 import java.sql.Driver;
@@ -23,7 +22,7 @@ public class DataBaseProvider {
 
     public void setup(HikariDataSource dataSource, Logger logger) {
         var config = QueryConfiguration.builder(dataSource)
-                .setExceptionHandler(err -> logger.log(Level.SEVERE, "An error occured during a database request", err))
+                .setExceptionHandler(err -> logger.log(Level.SEVERE, "An error occurred during a database request", err))
                 .build();
 
         QueryConfiguration.setDefault(config);

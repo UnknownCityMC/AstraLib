@@ -1,13 +1,11 @@
 package de.unknowncity.astralib.paper.plugin;
 
-import de.unknowncity.astralib.common.command.CommandRegistry;
 import de.unknowncity.astralib.common.configuration.setting.defaults.DataBaseSetting;
 import de.unknowncity.astralib.common.configuration.setting.serializer.DatabaseSettingSerializer;
 import de.unknowncity.astralib.common.database.DataBaseProvider;
 import de.unknowncity.astralib.common.database.DataBaseUpdater;
 import de.unknowncity.astralib.common.message.lang.Localization;
 import de.unknowncity.astralib.paper.api.hook.defaulthooks.PlaceholderApiHook;
-import de.unknowncity.astralib.paper.api.lib.AstraLibPaper;
 import de.unknowncity.astralib.paper.api.message.PaperMessenger;
 import de.unknowncity.astralib.paper.api.plugin.PaperAstraPlugin;
 import de.unknowncity.astralib.paper.plugin.command.LanguageCommand;
@@ -18,9 +16,6 @@ import de.unknowncity.astralib.paper.plugin.configuration.settings.LanguageSetti
 import de.unknowncity.astralib.paper.plugin.database.DataBaseButler;
 import de.unknowncity.astralib.paper.plugin.database.service.LanguageService;
 import de.unknowncity.astralib.paper.plugin.listener.PlayerJoinListener;
-import io.papermc.paper.command.brigadier.CommandSourceStack;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -28,7 +23,6 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 
 public class AstraLibPaperPlugin extends PaperAstraPlugin {
-
     private PaperMessenger messenger;
     private AstraLibConfig configuration;
     private LanguageService languageService;
@@ -36,9 +30,6 @@ public class AstraLibPaperPlugin extends PaperAstraPlugin {
 
     @Override
     public void onPluginEnable() {
-
-        registerHooks();
-
         this.configuration = new AstraLibConfig(
                 new DataBaseSetting(),
                 new LanguageSetting()
@@ -59,6 +50,8 @@ public class AstraLibPaperPlugin extends PaperAstraPlugin {
             builder.register(LanguageSetting.class, new LanguageSettingSerializer());
         });
 
+        registerHooks();
+
         if (configOpt.isPresent()) {
             this.configuration = configOpt.get();
         } else {
@@ -71,19 +64,18 @@ public class AstraLibPaperPlugin extends PaperAstraPlugin {
         initializeDataServices();
 
         initializeMessenger();
-        initializeCommandManager(messenger, languageService);
-        new LanguageCommand(this).apply(commandManager);
 
         getServer().getPluginManager().registerEvents(new PlayerJoinListener(this), this);
 
-        AstraLibPaper.setAstraLibPlugin(this);
+        new LanguageCommand(this).apply(commandManager);
     }
 
-    public void registerHooks() {
-        this.hookRegistry.register(new PlaceholderApiHook());
+    private void registerHooks() {
+        this.hookRegistry.register(new PlaceholderApiHook(getServer()));
     }
 
     private void initializeDataServices() {
+
         var databaseSettings = configuration.dataBaseSetting();
 
         var dataBaseProvider = new DataBaseProvider(databaseSettings);
@@ -106,15 +98,14 @@ public class AstraLibPaperPlugin extends PaperAstraPlugin {
     private void initializeMessenger() {
         var defaultLang = configuration.languageSetting().defaultLanguage();
 
-        this.localization = new Localization(getDataPath().resolve("lang"));
-        this.localization.loadLanguageFiles(getLogger());
+        this.localization = Localization.builder(getDataPath().resolve("lang")).withLogger(getLogger()).buildAndLoad();
+        var papiHook = hookRegistry.getRegistered(PlaceholderApiHook.class);
 
-        this.messenger = new PaperMessenger(
-                localization,
-                defaultLang,
-                languageService,
-                hookRegistry.getRegistered(PlaceholderApiHook.class).isAvailable(getServer())
-        );
+        this.messenger = PaperMessenger.builder(localization)
+                .withPlaceHolderAPI(papiHook)
+                .withDefaultLanguage(defaultLang)
+                .withLanguageService(languageService)
+                .build();
     }
 
     public Localization localization() {
