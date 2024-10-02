@@ -1,14 +1,10 @@
 package de.unknowncity.astralib.common.configuration;
 
-import de.unknowncity.astralib.common.configuration.setting.Setting;
 import de.unknowncity.astralib.common.configuration.setting.defaults.DataBaseSetting;
 import de.unknowncity.astralib.common.configuration.setting.defaults.RedisSetting;
 import de.unknowncity.astralib.common.configuration.setting.serializer.DatabaseSettingSerializer;
 import de.unknowncity.astralib.common.configuration.setting.serializer.RedisSettingSerializer;
-import de.unknowncity.astralib.common.structure.KeyValue;
 import org.spongepowered.configurate.ConfigurateException;
-import org.spongepowered.configurate.serialize.SerializationException;
-import org.spongepowered.configurate.serialize.TypeSerializer;
 import org.spongepowered.configurate.serialize.TypeSerializerCollection;
 import org.spongepowered.configurate.yaml.NodeStyle;
 import org.spongepowered.configurate.yaml.YamlConfigurationLoader;
@@ -16,13 +12,16 @@ import org.spongepowered.configurate.yaml.YamlConfigurationLoader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * @deprecated version 0.4.0 introduces a new config system based on jackson
+ * Use {@link YamlAstraConfiguration} instead
+ */
+@Deprecated(forRemoval = true, since = "0.4.0")
 public class AstraConfigurationLoader {
     private final Logger logger;;
 

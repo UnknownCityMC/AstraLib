@@ -28,10 +28,12 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.configurate.NodePath;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.logging.Level;
 
-public class PaperAstraPlugin extends JavaPlugin implements AstraPlugin<CommandSender, Player> {
+public class PaperAstraPlugin extends JavaPlugin implements AstraPlugin {
     protected PaperCommandManager<PaperCommandSource> commandManager;
     protected CommandRegistry<CommandSender, Player, PaperAstraPlugin> commandRegistry;
 
@@ -39,8 +41,8 @@ public class PaperAstraPlugin extends JavaPlugin implements AstraPlugin<CommandS
     protected CaptionRegistry<PaperCommandSource> captionRegistry;
     protected HookRegistry<Server, PaperAstraPlugin, PaperPluginHook> hookRegistry;
 
-    protected AstraConfigurationLoader configLoader;
     protected AstraLanguageService<Player> languageService;
+    protected AstraConfigurationLoader configLoader;
     protected Language defaultLanguage = Language.GERMAN;
 
     public static final String ASTRA_LIB_MAIN_CONFIG_NAME = "astraconfig.yml";
@@ -48,9 +50,9 @@ public class PaperAstraPlugin extends JavaPlugin implements AstraPlugin<CommandS
 
     @Override
     public void onEnable() {
-        this.configLoader = new AstraConfigurationLoader(getLogger());
         this.hookRegistry = new HookRegistry<>(this);
 
+        this.configLoader = new AstraConfigurationLoader(this.getLogger());
         registerDefaultHooks();
 
         this.serviceRegistry = new ServiceRegistry<>(this);
@@ -151,12 +153,26 @@ public class PaperAstraPlugin extends JavaPlugin implements AstraPlugin<CommandS
     }
 
     @Override
-    public void saveDefaultResource(Path path) {
-        if (getDataFolder().toPath().resolve(path).toFile().exists()) {
+    public void saveDefaultResource(Path from, Path to) {
+        if (Files.exists(to)) {
             return;
         }
 
-        saveResource(path.toString(), false);
+        try (var resourceAsStream = getClass().getResourceAsStream("/" + from.toString())) {
+            if (resourceAsStream == null) {
+                getLogger().log(
+                        Level.SEVERE, "Failed to save " + from + ". " +
+                                "The plugin developer tried to save a file that does not exist in the plugins jar file!"
+                );
+                return;
+            }
+            Files.createDirectories(to.getParent());
+            try (var outputStream = Files.newOutputStream(to)) {
+                resourceAsStream.transferTo(outputStream);
+            }
+        } catch (IOException e) {
+            getLogger().log(Level.SEVERE, "Failed to save " + from, e);
+        }
     }
 
     @Override

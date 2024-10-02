@@ -1,5 +1,6 @@
 package de.unknowncity.astralib.common.configuration.setting.serializer;
 
+import de.unknowncity.astralib.common.configuration.YamlAstraConfiguration;
 import de.unknowncity.astralib.common.configuration.setting.defaults.DataBaseSetting;
 import de.unknowncity.astralib.common.database.DataBaseDriver;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -11,6 +12,11 @@ import java.lang.reflect.Type;
 import java.nio.file.Path;
 import java.util.Objects;
 
+/**
+ * @deprecated version 0.4.0 introduces a new config system based on jackson
+ * Use {@link YamlAstraConfiguration} instead
+ */
+@Deprecated(forRemoval = true, since = "0.4.0")
 public class DatabaseSettingSerializer implements TypeSerializer<DataBaseSetting> {
     @Override
     public DataBaseSetting deserialize(Type type, ConfigurationNode node) throws SerializationException {

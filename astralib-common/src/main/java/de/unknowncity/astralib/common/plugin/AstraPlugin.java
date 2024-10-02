@@ -2,7 +2,7 @@ package de.unknowncity.astralib.common.plugin;
 
 import java.nio.file.Path;
 
-public interface AstraPlugin<C, P> {
+public interface AstraPlugin {
 
     void onPluginEnable();
 
@@ -10,6 +10,5 @@ public interface AstraPlugin<C, P> {
 
     void disableSelf();
 
-    void saveDefaultResource(Path path);
-
+    void saveDefaultResource(Path from, Path to);
 }

@@ -2,6 +2,11 @@ package de.unknowncity.astralib.common.configuration.setting.defaults;
 
 import de.unknowncity.astralib.common.configuration.setting.Setting;
 
+/**
+ * @deprecated version 0.4.0 introduces a new config system based on jackson
+ * Use {@link ModernRedisSetting} instead
+ */
+@Deprecated(forRemoval = true, since = "0.4.0")
 public class RedisSetting implements Setting {
     private String host = "localhost";
     private int port = 11;

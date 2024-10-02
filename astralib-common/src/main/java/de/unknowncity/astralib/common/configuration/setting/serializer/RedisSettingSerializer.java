@@ -1,5 +1,6 @@
 package de.unknowncity.astralib.common.configuration.setting.serializer;
 
+import de.unknowncity.astralib.common.configuration.YamlAstraConfiguration;
 import de.unknowncity.astralib.common.configuration.setting.defaults.RedisSetting;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.spongepowered.configurate.ConfigurationNode;
@@ -8,6 +9,11 @@ import org.spongepowered.configurate.serialize.TypeSerializer;
 
 import java.lang.reflect.Type;
 
+/**
+ * @deprecated version 0.4.0 introduces a new config system based on jackson
+ * Use {@link YamlAstraConfiguration} instead
+ */
+@Deprecated(forRemoval = true, since = "0.4.0")
 public class RedisSettingSerializer implements TypeSerializer<RedisSetting> {
     @Override
     public RedisSetting deserialize(Type type, ConfigurationNode node) throws SerializationException {

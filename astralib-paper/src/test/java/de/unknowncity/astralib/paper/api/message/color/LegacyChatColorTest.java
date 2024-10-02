@@ -8,6 +8,6 @@ class LegacyChatColorTest {
 
     @Test
     void testTranslateToMiniMessage() {
-        assertEquals("<red><b>Test <red>!", LegacyChatColor.translateToMiniMessage('&', "&f&lTest <red>!"));
+        assertEquals("<white><b>Test <red>!", LegacyChatColor.translateToMiniMessage('&', "&f&lTest <red>!"));
     }
 }

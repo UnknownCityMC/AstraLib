@@ -21,6 +21,9 @@ dependencies {
     bukkitLibrary(libs.configurate.yaml)
     bukkitLibrary(libs.configurate.hocon)
 
+    bukkitLibrary(libs.jackson.yaml)
+    bukkitLibrary(libs.jackson.toml)
+
     bukkitLibrary(libs.redis)
 
     bukkitLibrary(libs.sadu.mysql)
@@ -37,6 +40,7 @@ dependencies {
 
     testImplementation(platform("org.junit:junit-bom:5.9.1"))
     testImplementation("org.junit.jupiter:junit-jupiter")
+    testImplementation(libs.paper.api)
 }
 
 tasks {
@@ -44,6 +48,10 @@ tasks {
         archiveVersion.set(rootProject.version.toString())
         archiveBaseName.set("AstraLib-Paper")
         archiveClassifier.set("")
+    }
+
+    test {
+        useJUnitPlatform()
     }
 }
 

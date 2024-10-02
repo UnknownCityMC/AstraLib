@@ -1,18 +1,15 @@
 package de.unknowncity.astralib.paper.plugin.configuration.settings;
 
-import de.unknowncity.astralib.common.configuration.setting.Setting;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import de.unknowncity.astralib.common.message.lang.Language;
 
-public class LanguageSetting implements Setting {
+public class LanguageSetting  {
 
+        @JsonProperty
         private Language defaultLanguage = Language.ENGLISH;
 
+        @JsonProperty
         private boolean allowChange = true;
-
-        public LanguageSetting(Language defaultLanguage, boolean allowChange) {
-                this.defaultLanguage = defaultLanguage;
-                this.allowChange = allowChange;
-        }
 
         public LanguageSetting() {
 

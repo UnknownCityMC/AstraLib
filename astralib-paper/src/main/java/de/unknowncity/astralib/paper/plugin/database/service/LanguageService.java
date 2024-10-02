@@ -2,7 +2,7 @@ package de.unknowncity.astralib.paper.plugin.database.service;
 
 import de.unknowncity.astralib.common.service.AstraLanguageService;
 import de.unknowncity.astralib.common.message.lang.Language;
-import de.unknowncity.astralib.paper.plugin.configuration.AstraLibConfig;
+import de.unknowncity.astralib.paper.plugin.configuration.AstraLibConfiguration;
 import de.unknowncity.astralib.paper.plugin.database.dao.language.LanguageDao;
 import org.bukkit.entity.Player;
 
@@ -14,9 +14,9 @@ public class LanguageService implements AstraLanguageService<Player> {
 
     private final LanguageDao languageDao;
     private final Map<UUID, Language> languageCache;
-    private final AstraLibConfig configuration;
+    private final AstraLibConfiguration configuration;
 
-    public LanguageService(LanguageDao languageDao, AstraLibConfig configuration) {
+    public LanguageService(LanguageDao languageDao, AstraLibConfiguration configuration) {
         this.languageDao = languageDao;
         this.languageCache = new HashMap<>();
         this.configuration = configuration;

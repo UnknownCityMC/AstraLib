@@ -5,6 +5,11 @@ import de.unknowncity.astralib.common.database.DataBaseDriver;
 
 import java.nio.file.Path;
 
+/**
+ * @deprecated version 0.4.0 introduces a new config system based on jackson
+ * Use {@link ModernDataBaseSetting} instead
+ */
+@Deprecated(forRemoval = true, since = "0.4.0")
 public class DataBaseSetting implements Setting {
     private DataBaseDriver dataBaseDriver = DataBaseDriver.MARIADB;
     private String host = "localhost";
