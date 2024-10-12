@@ -15,8 +15,9 @@ val mainClass = "${rootProject.group}.paper.plugin.AstraLibPaperPlugin"
 dependencies {
     api(project(":astralib-common"))
 
-    bukkitLibrary(libs.cloud.paper)
-    bukkitLibrary(libs.cloud.extras)
+    implementation(libs.cloud.paper)
+    implementation(libs.cloud.extras)
+    implementation(libs.cloud.confirm)
 
     bukkitLibrary(libs.configurate.yaml)
     bukkitLibrary(libs.configurate.hocon)
@@ -48,6 +49,9 @@ tasks {
         archiveVersion.set(rootProject.version.toString())
         archiveBaseName.set("AstraLib-Paper")
         archiveClassifier.set("")
+
+        fun relocateDependency(from : String) = relocate(from, "$shadeBasePath$from")
+        relocateDependency("org.incendo")
     }
 
     test {
@@ -94,6 +98,7 @@ publishing {
         register<MavenPublication>("maven") {
             artifact(tasks["shadowJar"])
             group = rootProject.group
+            artifactId = project.name
             version = rootProject.version.toString()
         }
     }
