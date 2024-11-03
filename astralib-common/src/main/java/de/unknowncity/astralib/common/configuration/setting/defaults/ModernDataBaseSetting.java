@@ -1,13 +1,13 @@
 package de.unknowncity.astralib.common.configuration.setting.defaults;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import de.unknowncity.astralib.common.database.DataBaseDriver;
+import de.unknowncity.astralib.common.database.DatabaseDriver;
 
 import java.nio.file.Path;
 
 public class ModernDataBaseSetting {
     @JsonProperty
-    private DataBaseDriver dataBaseDriver = DataBaseDriver.MARIADB;
+    private DatabaseDriver dataBaseDriver = DatabaseDriver.MARIADB;
     @JsonProperty
     private String host = "localhost";
     @JsonProperty
@@ -33,7 +33,7 @@ public class ModernDataBaseSetting {
         return Path.of(sqliteDataBasePath);
     }
 
-    public DataBaseDriver dataBaseDriver() {
+    public DatabaseDriver dataBaseDriver() {
         return dataBaseDriver;
     }
 

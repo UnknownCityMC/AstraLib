@@ -1,7 +1,6 @@
 package de.unknowncity.astralib.paper.api.plugin;
 
 import de.unknowncity.astralib.common.command.CommandRegistry;
-import de.unknowncity.astralib.common.configuration.AstraConfigurationLoader;
 import de.unknowncity.astralib.common.hook.HookRegistry;
 import de.unknowncity.astralib.common.message.lang.Language;
 import de.unknowncity.astralib.common.plugin.AstraPlugin;
@@ -42,7 +41,6 @@ public class PaperAstraPlugin extends JavaPlugin implements AstraPlugin {
     protected HookRegistry<Server, PaperAstraPlugin, PaperPluginHook> hookRegistry;
 
     protected AstraLanguageService<Player> languageService;
-    protected AstraConfigurationLoader configLoader;
     protected Language defaultLanguage = Language.GERMAN;
 
     public static final String ASTRA_LIB_MAIN_CONFIG_NAME = "astraconfig.yml";
@@ -52,7 +50,6 @@ public class PaperAstraPlugin extends JavaPlugin implements AstraPlugin {
     public void onEnable() {
         this.hookRegistry = new HookRegistry<>(this);
 
-        this.configLoader = new AstraConfigurationLoader(this.getLogger());
         registerDefaultHooks();
 
         this.serviceRegistry = new ServiceRegistry<>(this);

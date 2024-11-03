@@ -1,7 +1,7 @@
 package de.unknowncity.astralib.common.configuration.setting.defaults;
 
 import de.unknowncity.astralib.common.configuration.setting.Setting;
-import de.unknowncity.astralib.common.database.DataBaseDriver;
+import de.unknowncity.astralib.common.database.DatabaseDriver;
 
 import java.nio.file.Path;
 
@@ -11,7 +11,7 @@ import java.nio.file.Path;
  */
 @Deprecated(forRemoval = true, since = "0.4.0")
 public class DataBaseSetting implements Setting {
-    private DataBaseDriver dataBaseDriver = DataBaseDriver.MARIADB;
+    private DatabaseDriver dataBaseDriver = DatabaseDriver.MARIADB;
     private String host = "localhost";
     private int port = 3306;
     private String database = "astra_lib";
@@ -22,7 +22,7 @@ public class DataBaseSetting implements Setting {
     private Path sqliteDataBasePath = Path.of("/");
 
     public DataBaseSetting(
-            DataBaseDriver dataBaseDriver,
+            DatabaseDriver dataBaseDriver,
             String host,
             int port,
             String database,
@@ -51,7 +51,7 @@ public class DataBaseSetting implements Setting {
         return sqliteDataBasePath;
     }
 
-    public DataBaseDriver dataBaseDriver() {
+    public DatabaseDriver dataBaseDriver() {
         return dataBaseDriver;
     }
 

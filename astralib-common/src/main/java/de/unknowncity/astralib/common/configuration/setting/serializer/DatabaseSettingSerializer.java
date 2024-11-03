@@ -2,7 +2,7 @@ package de.unknowncity.astralib.common.configuration.setting.serializer;
 
 import de.unknowncity.astralib.common.configuration.YamlAstraConfiguration;
 import de.unknowncity.astralib.common.configuration.setting.defaults.DataBaseSetting;
-import de.unknowncity.astralib.common.database.DataBaseDriver;
+import de.unknowncity.astralib.common.database.DatabaseDriver;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
@@ -20,7 +20,7 @@ import java.util.Objects;
 public class DatabaseSettingSerializer implements TypeSerializer<DataBaseSetting> {
     @Override
     public DataBaseSetting deserialize(Type type, ConfigurationNode node) throws SerializationException {
-        var driver = DataBaseDriver.valueOf(node.node("driver").getString());
+        var driver = DatabaseDriver.valueOf(node.node("driver").getString());
         var host = node.node("host").getString();
         var port = node.node("port").getInt();
         var database = node.node("database").getString();

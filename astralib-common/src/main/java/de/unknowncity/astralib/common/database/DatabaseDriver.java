@@ -1,5 +1,5 @@
 package de.unknowncity.astralib.common.database;
 
-public enum DataBaseDriver {
+public enum DatabaseDriver {
     MARIADB, MYSQL, POSTGRESQL, SQLITE
 }

@@ -18,25 +18,24 @@ import java.util.logging.Logger;
 
 public class StandardDataBaseProvider {
 
-    private static void setup(HikariDataSource dataSource) {
-        var config = QueryConfiguration.builder(dataSource)
+    private static QueryConfiguration setup(HikariDataSource dataSource) {
+        return QueryConfiguration.builder(dataSource)
                 .setExceptionHandler(err -> Logger.getLogger("DataBaseProvider").log(Level.SEVERE, "An error occurred during a database request", err))
                 .build();
-
-        QueryConfiguration.setDefault(config);
     }
 
-    public static void updateAndConnectToDataBase(ModernDataBaseSetting dataBaseSetting, ClassLoader classLoader) {
+    public static QueryConfiguration updateAndConnectToDataBase(ModernDataBaseSetting dataBaseSetting, ClassLoader classLoader) {
         var dataSource = createDataSource(dataBaseSetting);
-            setup(dataSource);
+        var config = setup(dataSource);
         try {
             update(dataBaseSetting.dataBaseDriver(), dataSource, classLoader);
         } catch (SQLException | IOException e) {
             Logger.getLogger("DataBaseProvider").log(Level.SEVERE, "An error occurred during a database request", e);
         }
+        return config;
     }
 
-    private static void update(DataBaseDriver dataBaseDriver, HikariDataSource dataSource, ClassLoader classLoader) throws IOException, SQLException {
+    private static void update(DatabaseDriver dataBaseDriver, HikariDataSource dataSource, ClassLoader classLoader) throws IOException, SQLException {
         switch (dataBaseDriver) {
             case MARIADB -> SqlUpdater.builder(dataSource, MariaDb.get())
                     .setVersionTable("version")
