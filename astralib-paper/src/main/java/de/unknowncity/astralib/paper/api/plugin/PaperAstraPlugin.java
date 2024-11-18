@@ -143,7 +143,7 @@ public class PaperAstraPlugin extends JavaPlugin implements AstraPlugin {
 
     @Override
     public void saveDefaultResource(Path from, Path to) {
-        if (Files.exists(to)) {
+        if (Files.exists(getDataPath().resolve(to))) {
             return;
         }
 
@@ -155,8 +155,8 @@ public class PaperAstraPlugin extends JavaPlugin implements AstraPlugin {
                 );
                 return;
             }
-            Files.createDirectories(to.getParent());
-            try (var outputStream = Files.newOutputStream(to)) {
+            Files.createDirectories(getDataPath().resolve(to.getParent()));
+            try (var outputStream = Files.newOutputStream(getDataPath().resolve(to))) {
                 resourceAsStream.transferTo(outputStream);
             }
         } catch (IOException e) {

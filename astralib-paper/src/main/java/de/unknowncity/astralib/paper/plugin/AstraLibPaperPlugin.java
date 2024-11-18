@@ -29,8 +29,8 @@ public class AstraLibPaperPlugin extends PaperAstraPlugin {
 
         registerHooks();
 
-        this.saveDefaultResource(Path.of("en_US.yml"), Path.of("lang/en_US.yml"));
-        this.saveDefaultResource(Path.of("de_DE.yml"), Path.of("lang/de_DE.yml"));
+        this.saveDefaultResource(Path.of("lang/en_US.yml"), Path.of("lang/en_US.yml"));
+        this.saveDefaultResource(Path.of("lang/de_DE.yml"), Path.of("lang/de_DE.yml"));
 
         initializeDataServices();
 
