@@ -7,7 +7,6 @@ import de.unknowncity.astralib.common.plugin.AstraPlugin;
 import de.unknowncity.astralib.common.service.AstraLanguageService;
 import de.unknowncity.astralib.common.service.ServiceRegistry;
 import de.unknowncity.astralib.paper.api.command.sender.PaperCommandSource;
-import de.unknowncity.astralib.paper.api.command.sender.PaperPlayerCommandSource;
 import de.unknowncity.astralib.paper.api.hook.PaperPluginHook;
 import de.unknowncity.astralib.paper.api.hook.defaulthooks.PlaceholderApiHook;
 import de.unknowncity.astralib.paper.api.message.PaperMessenger;
@@ -17,12 +16,11 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.incendo.cloud.CommandManager;
-import org.incendo.cloud.SenderMapper;
 import org.incendo.cloud.caption.CaptionProvider;
 import org.incendo.cloud.caption.CaptionRegistry;
 import org.incendo.cloud.caption.StandardCaptionKeys;
 import org.incendo.cloud.execution.ExecutionCoordinator;
-import org.incendo.cloud.paper.PaperCommandManager;
+import org.incendo.cloud.paper.LegacyPaperCommandManager;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.configurate.NodePath;
@@ -33,11 +31,11 @@ import java.nio.file.Path;
 import java.util.logging.Level;
 
 public class PaperAstraPlugin extends JavaPlugin implements AstraPlugin {
-    protected PaperCommandManager<PaperCommandSource> commandManager;
+    protected LegacyPaperCommandManager<CommandSender> commandManager;
     protected CommandRegistry<CommandSender, Player, PaperAstraPlugin> commandRegistry;
 
     protected ServiceRegistry<PaperAstraPlugin> serviceRegistry;
-    protected CaptionRegistry<PaperCommandSource> captionRegistry;
+    protected CaptionRegistry<CommandSender> captionRegistry;
     protected HookRegistry<Server, PaperAstraPlugin, PaperPluginHook> hookRegistry;
 
     protected AstraLanguageService<Player> languageService;
@@ -66,15 +64,9 @@ public class PaperAstraPlugin extends JavaPlugin implements AstraPlugin {
     @ApiStatus.Internal
     public void initializeCommandManager(PaperMessenger messenger) {
         try {
-            this.commandManager = PaperCommandManager.builder(SenderMapper.create(
-                    commandSourceStack -> commandSourceStack.getSender() instanceof Player ?
-                            new PaperPlayerCommandSource((Player) commandSourceStack.getSender(), commandSourceStack) :
-                            new PaperCommandSource(commandSourceStack.getSender(), commandSourceStack),
-                    paperCommandSource -> paperCommandSource.commandSourceStack()
-
-                    ))
-                    .executionCoordinator(ExecutionCoordinator.<PaperCommandSource>builder().build())
-                    .buildOnEnable(this);
+            this.commandManager = LegacyPaperCommandManager.createNative(
+                    this, ExecutionCoordinator.simpleCoordinator()
+            );
 
         } catch (Exception e) {
             this.getLogger().log(Level.SEVERE, "Failed to initialize command manager", e);
@@ -182,7 +174,7 @@ public class PaperAstraPlugin extends JavaPlugin implements AstraPlugin {
 
     }
 
-    public CommandManager<PaperCommandSource> commandManager() {
+    public CommandManager<CommandSender> commandManager() {
         return commandManager;
     }
 }

@@ -38,6 +38,15 @@ public abstract class YamlAstraConfiguration {
     public void save() {
         var configPath = targetFile().toFile();
 
+        if (!configPath.exists()) {
+            configPath.getParentFile().mkdirs();
+            try {
+                configPath.createNewFile();
+            } catch (IOException e) {
+                Logger.getLogger("Configuration").log(Level.SEVERE, "Error while saving configuration file", e);
+            }
+        }
+
         var objectMapper = new ObjectMapper(new YAMLFactory().disable(YAMLGenerator.Feature.WRITE_DOC_START_MARKER));
         objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         objectMapper.findAndRegisterModules();
@@ -45,7 +54,7 @@ public abstract class YamlAstraConfiguration {
         try {
             objectMapper.writeValue(configPath, this);
         } catch (IOException e) {
-            Logger.getLogger("Configuration").log(Level.SEVERE, "Error while reading configuration file", e);
+            Logger.getLogger("Configuration").log(Level.SEVERE, "Error while saving configuration file", e);
         }
     }
 
