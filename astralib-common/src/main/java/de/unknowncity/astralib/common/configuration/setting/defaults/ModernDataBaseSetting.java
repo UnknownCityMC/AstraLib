@@ -7,7 +7,7 @@ import java.nio.file.Path;
 
 public class ModernDataBaseSetting {
     @JsonProperty
-    private DatabaseDriver dataBaseDriver = DatabaseDriver.MARIADB;
+    private DatabaseDriver dataBaseDriver = DatabaseDriver.SQLITE;
     @JsonProperty
     private String host = "localhost";
     @JsonProperty
@@ -23,7 +23,7 @@ public class ModernDataBaseSetting {
     @JsonProperty
     private int minIdleConnections = 1;
     @JsonProperty
-    private String sqliteDataBasePath = "/plugins/DummyPlugin/sqlite.db";
+    private String sqliteDataBasePath = "sqlite.db";
 
     public ModernDataBaseSetting() {
 

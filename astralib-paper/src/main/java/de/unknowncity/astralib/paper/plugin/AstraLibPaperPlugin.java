@@ -49,7 +49,7 @@ public class AstraLibPaperPlugin extends PaperAstraPlugin {
 
         var databaseSettings = configuration.dataBaseSetting();
 
-        var queryConfig = StandardDataBaseProvider.updateAndConnectToDataBase(databaseSettings, getClassLoader());
+        var queryConfig = StandardDataBaseProvider.updateAndConnectToDataBase(databaseSettings, getClassLoader(), getDataPath());
 
         this.languageService = new LanguageService(new MariaDBLanguageDao(queryConfig), configuration);
     }

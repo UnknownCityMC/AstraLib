@@ -11,6 +11,7 @@ import de.chojo.sadu.updater.SqlUpdater;
 import de.unknowncity.astralib.common.configuration.setting.defaults.ModernDataBaseSetting;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.sql.Driver;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -24,8 +25,8 @@ public class StandardDataBaseProvider {
                 .build();
     }
 
-    public static QueryConfiguration updateAndConnectToDataBase(ModernDataBaseSetting dataBaseSetting, ClassLoader classLoader) {
-        var dataSource = createDataSource(dataBaseSetting);
+    public static QueryConfiguration updateAndConnectToDataBase(ModernDataBaseSetting dataBaseSetting, ClassLoader classLoader, Path pluginDataPath) {
+        var dataSource = createDataSource(dataBaseSetting, pluginDataPath);
         var config = setup(dataSource);
         try {
             update(dataBaseSetting.dataBaseDriver(), dataSource, classLoader);
@@ -59,7 +60,7 @@ public class StandardDataBaseProvider {
         }
     }
 
-    private static HikariDataSource createDataSource(ModernDataBaseSetting dataBaseSetting) {
+    private static HikariDataSource createDataSource(ModernDataBaseSetting dataBaseSetting, Path pluginDataPath) {
         switch (dataBaseSetting.dataBaseDriver()) {
             case MARIADB -> {
                 return DataSourceCreator.create(MariaDb.get())
@@ -109,7 +110,7 @@ public class StandardDataBaseProvider {
             default -> {
                 return DataSourceCreator.create(SqLite.get())
                         .configure(config -> config
-                                .path(dataBaseSetting.sqliteDataBasePath())
+                                .path(pluginDataPath.resolve(dataBaseSetting.sqliteDataBasePath()))
                                 .driverClass(Driver.class)
                         )
                         .create()
