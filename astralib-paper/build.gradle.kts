@@ -85,7 +85,11 @@ publishing {
     repositories {
         maven {
             name = "UnknownCity"
-            url = uri("https://repo.unknowncity.de/snapshots")
+            url = if(project.version.toString().endsWith("-SNAPSHOT")) {
+                uri("https://repo.unknowncity.de/snapshots")
+            } else {
+                uri("https://repo.unknowncity.de/releases")
+            }
 
             credentials {
                 username = System.getenv("MVN_REPO_USERNAME")
