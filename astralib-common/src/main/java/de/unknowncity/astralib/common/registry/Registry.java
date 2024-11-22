@@ -8,7 +8,7 @@ import java.util.Set;
 
 public abstract class Registry<I, T extends Registrable<I>> {
     private final Set<Registrable<I>> registered;
-    private final I plugin;
+    protected final I plugin;
 
     public Registry(I plugin) {
         this.registered = new HashSet<>();
@@ -21,7 +21,6 @@ public abstract class Registry<I, T extends Registrable<I>> {
      */
     public void register(T registrable) {
         this.registered.add(registrable);
-        registrable.startup(plugin);
     }
 
     /**

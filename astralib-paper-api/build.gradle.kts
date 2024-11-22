@@ -1,49 +1,40 @@
 plugins {
     `maven-publish`
-    id("java")
+    `java-library`
 }
 
-val shadeBasePath = "${group}.${rootProject.name.lowercase()}."
+val shadeBasePath = "${rootProject.group}.libs."
 
 dependencies {
-    compileOnly(libs.cloud.core)
+    api(project(":astralib-common"))
 
-    compileOnly(libs.configurate.yaml)
-    compileOnly(libs.configurate.hocon)
+    api(libs.cloud.paper)
+    api(libs.cloud.extras)
+    api(libs.cloud.confirm)
 
-    compileOnly(libs.redis)
+    api(libs.configurate.yaml)
 
-    compileOnly(libs.sadu.mysql)
-    compileOnly(libs.sadu.mariadb)
-    compileOnly(libs.sadu.postgresql)
-    compileOnly(libs.sadu.sqlite)
-    compileOnly(libs.sadu.queries)
-    compileOnly(libs.sadu.datasource)
-    compileOnly(libs.jackson.yaml)
-    compileOnly(libs.jackson.toml)
+    api(libs.jackson.yaml)
+    api(libs.jackson.toml)
 
-    compileOnly(libs.adventure.text.minimessage)
-    compileOnly(libs.adventure.api)
+    api(libs.redis)
+
+    api(libs.sadu.mysql)
+    api(libs.sadu.mariadb)
+    api(libs.sadu.postgresql)
+    api(libs.sadu.sqlite)
+    api(libs.sadu.queries)
+    api(libs.sadu.datasource)
+
+    compileOnly(libs.papi)
+    compileOnly(libs.paper.api)
 
     testImplementation(platform("org.junit:junit-bom:5.9.1"))
     testImplementation("org.junit.jupiter:junit-jupiter")
-
-    testImplementation(libs.jackson.yaml)
-    testImplementation(libs.jackson.toml)
+    testImplementation(libs.paper.api)
 }
 
-
 tasks {
-    compileJava {
-        options.encoding = Charsets.UTF_8.name()
-        options.release.set(17)
-    }
-
-    jar {
-        archiveBaseName.set(rootProject.name)
-        archiveVersion.set(rootProject.version.toString())
-    }
-
     test {
         useJUnitPlatform()
     }
