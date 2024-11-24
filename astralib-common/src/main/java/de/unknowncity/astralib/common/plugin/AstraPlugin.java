@@ -10,5 +10,5 @@ public interface AstraPlugin {
 
     void disableSelf();
 
-    void saveDefaultResource(Path from, Path to);
+    void saveDefaultResource(String from, Path to);
 }

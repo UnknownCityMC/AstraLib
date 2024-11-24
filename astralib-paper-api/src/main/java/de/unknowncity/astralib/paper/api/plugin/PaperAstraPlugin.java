@@ -9,7 +9,6 @@ import de.unknowncity.astralib.paper.api.hook.PaperPluginHook;
 import de.unknowncity.astralib.paper.api.hook.defaulthooks.PlaceholderApiHook;
 import de.unknowncity.astralib.paper.api.lib.AstraLibPaper;
 import de.unknowncity.astralib.paper.api.message.PaperMessenger;
-import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -145,12 +144,12 @@ public class PaperAstraPlugin extends JavaPlugin implements AstraPlugin {
     }
 
     @Override
-    public void saveDefaultResource(Path from, Path to) {
+    public void saveDefaultResource(String from, Path to) {
         if (Files.exists(getDataPath().resolve(to))) {
             return;
         }
 
-        try (var resourceAsStream = getClass().getResourceAsStream(from.toString())) {
+        try (var resourceAsStream = getClassLoader().getResourceAsStream(from)) {
             if (resourceAsStream == null) {
                 getLogger().log(
                         Level.SEVERE, "Failed to save " + from + ". " +
