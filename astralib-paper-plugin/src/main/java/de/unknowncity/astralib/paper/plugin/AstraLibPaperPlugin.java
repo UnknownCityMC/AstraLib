@@ -19,7 +19,7 @@ public class AstraLibPaperPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        var configOpt = YamlAstraConfiguration.loadFromFile(AstraLibConfiguration.class);
+        var configOpt = AstraLibConfiguration.loadFromFile(AstraLibConfiguration.class);
 
         this.configuration = configOpt.orElseGet(AstraLibConfiguration::new);
         this.configuration.save();

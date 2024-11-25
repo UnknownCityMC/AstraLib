@@ -16,15 +16,15 @@ dependencies {
         exclude(group = "*", module = "*")
     }
 
-    implementation(libs.cloud.paper)
-    implementation(libs.cloud.extras)
-    implementation(libs.cloud.confirm)
+    bukkitLibrary(libs.cloud.paper)
+    bukkitLibrary(libs.cloud.extras)
+    bukkitLibrary(libs.cloud.confirm)
 
     bukkitLibrary(libs.configurate.yaml)
     bukkitLibrary(libs.configurate.hocon)
 
-    bukkitLibrary(libs.jackson.yaml)
-    bukkitLibrary(libs.jackson.toml)
+    implementation(libs.jackson.yaml)
+    implementation(libs.jackson.toml)
 
     bukkitLibrary(libs.redis)
 
@@ -69,7 +69,6 @@ tasks {
         archiveClassifier.set("")
 
         fun relocateDependency(from : String) = relocate(from, "$shadeBasePath$from")
-        relocateDependency("org.incendo")
-        relocateDependency("io.leangen")
+        relocateDependency("com.fasterxml")
     }
 }
