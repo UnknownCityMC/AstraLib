@@ -38,6 +38,14 @@ public interface Messenger<C, P> {
      String getString(Language language, NodePath path);
 
     /**
+     * Retrieves a multiline language string as is
+     * @param language The language to find the component in
+     * @param path The path to the language string in the language configuration
+     * @return A plain multiline language string
+     */
+     List<String> getStringList(Language language, NodePath path);
+
+    /**
      * Retrieves a single component from multiple lines in the lang configuration
      * @param path The path to the language string in the language configuration
      * @param player The player that the placeholders should be replaced for
@@ -111,7 +119,13 @@ public interface Messenger<C, P> {
      * @param times how long the title should fade in / out and stay
      * @param tagResolvers Optional placeholders and their replacements
      */
-     void broadcastTitle(Collection<P> players, NodePath pathTitle, NodePath pathSubTitle, Title.Times times, TagResolver... tagResolvers);
+     void broadcastTitle(Collection<? extends P> players, NodePath pathTitle, NodePath pathSubTitle, Title.Times times, TagResolver... tagResolvers);
+
+     void broadcastTitle(Collection<? extends P> players, NodePath pathTitle, NodePath pathSubTitle, TagResolver... tagResolvers);
+
+     void broadcastTitle(NodePath pathTitle, NodePath pathSubTitle, Title.Times times, TagResolver... tagResolvers);
+
+     void broadcastTitle(NodePath pathTitle, NodePath pathSubTitle, TagResolver... tagResolvers);
 
     /**
      * Sends an action bar message and subtitle to the given player
@@ -122,11 +136,13 @@ public interface Messenger<C, P> {
      void sendActionBar(P player, NodePath path, TagResolver... tagResolvers);
 
     /**
-     * Sends an action bar message and subtitle to all online players
+     * Sends an action bar message and subtitle to all online players or a  collection of players
      * @param path The path to the title language string in the language configuration
      * @param tagResolvers Optional placeholders and their replacements
      */
-     void broadcastActionBar(Collection<P> players, NodePath path, TagResolver... tagResolvers);
+     void broadcastActionBar(Collection<? extends P> players, NodePath path, TagResolver... tagResolvers);
+
+     void broadcastActionBar(NodePath path, TagResolver... tagResolvers);
 
 
     /**
@@ -138,9 +154,11 @@ public interface Messenger<C, P> {
     void sendMessage(C commandSender, NodePath path, TagResolver... tagResolvers);
 
     /**
-     * Sends a message and subtitle to all online players
+     * Sends a message and subtitle to all online players or a  collection of players
      * @param path The path to the title language string in the language configuration
      * @param tagResolvers Optional placeholders and their replacements
      */
-     void broadcastMessage(Collection<P> players, NodePath path, TagResolver... tagResolvers);
+     void broadcastMessage(Collection<? extends P> players, NodePath path, TagResolver... tagResolvers);
+
+     void broadcastMessage(NodePath path, TagResolver... tagResolvers);
 }

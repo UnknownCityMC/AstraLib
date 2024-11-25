@@ -12,13 +12,17 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.kyori.adventure.title.Title;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.spongepowered.configurate.NodePath;
 import org.spongepowered.configurate.serialize.SerializationException;
 
+import java.time.Duration;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 public class PaperMessenger implements Messenger<CommandSender, Player> {
     private final Localization localization;
@@ -26,11 +30,17 @@ public class PaperMessenger implements Messenger<CommandSender, Player> {
     private final AstraLanguageService<Player> languageService;
     private final MiniMessage miniMessage;
     private final boolean papiAvailable;
+    private final int defaultFadeInDuration ;
+    private final int defaultStayDuration;
+    private final int defaultFadeOutDuration;
 
-    private PaperMessenger(Localization localization, Language defaultLanguage, AstraLanguageService<Player> languageService, boolean papiAvailable) {
+    private PaperMessenger(Localization localization, Language defaultLanguage, AstraLanguageService<Player> languageService, boolean papiAvailable, int defaultFadeInDuration, int defaultStayDuration, int defaultFadeOutDuration) {
         this.localization = localization;
         this.defaultLanguage = defaultLanguage;
         this.languageService = languageService;
+        this.defaultFadeInDuration = defaultFadeInDuration;
+        this.defaultStayDuration = defaultStayDuration;
+        this.defaultFadeOutDuration = defaultFadeOutDuration;
         this.miniMessage = MiniMessage.miniMessage();
         this.papiAvailable = papiAvailable;
     }
@@ -44,6 +54,9 @@ public class PaperMessenger implements Messenger<CommandSender, Player> {
         private AstraLanguageService<Player> languageService = null;
         private Language defaultLanguage = Language.ENGLISH;
         private boolean papiAvailable = false;
+        private int defaultFadeInDuration = 0;
+        private int defaultStayDuration = 1;
+        private int defaultFadeOutDuration = 0;
 
         public Builder(Localization localization) {
             this.localization = localization;
@@ -64,11 +77,34 @@ public class PaperMessenger implements Messenger<CommandSender, Player> {
             return Builder.this;
         }
 
+        public Builder withDefaultFadeInDuration(int defaultFadeInDuration) {
+            Builder.this.defaultFadeInDuration = defaultFadeInDuration;
+            return Builder.this;
+        }
+
+        public Builder withDefaultStayDuration(int defaultStayDuration) {
+            Builder.this.defaultStayDuration = defaultStayDuration;
+            return Builder.this;
+        }
+
+        public Builder withDefaultFadeOutDuration(int defaultFadeOutDuration) {
+            Builder.this.defaultFadeOutDuration = defaultFadeOutDuration;
+            return Builder.this;
+        }
+
         public PaperMessenger build() {
             if (languageService == null) {
                 languageService = FallbackLanguageService.create(defaultLanguage);
             }
-            return new PaperMessenger(localization, defaultLanguage, languageService, papiAvailable);
+            return new PaperMessenger(
+                    localization,
+                    defaultLanguage,
+                    languageService,
+                    papiAvailable,
+                    defaultFadeInDuration,
+                    defaultStayDuration,
+                    defaultFadeOutDuration
+            );
         }
     }
 
@@ -84,7 +120,7 @@ public class PaperMessenger implements Messenger<CommandSender, Player> {
 
     @Override
     public String getStringOrNotAvailable(Language language, NodePath path) {
-        return getString(language != null ? language : defaultLanguage, path) == null ? notAvailable(path) : getString(language, path);
+        return Objects.requireNonNullElseGet(getString(language != null ? language : defaultLanguage, path), () ->  notAvailable(path));
     }
 
     @Override
@@ -92,9 +128,20 @@ public class PaperMessenger implements Messenger<CommandSender, Player> {
         return localization.langNode(language != null ? language : defaultLanguage).node(path).getString();
     }
 
+    @Override
+    public List<String> getStringList(Language language, NodePath path) {
+        List<String> list;
+        try {
+            list = localization.langNode(language != null ? language : defaultLanguage).node(path).getList(String.class);
+        } catch (SerializationException e) {
+            throw new RuntimeException(e);
+        }
+        return list;
+    }
+
     public String getString(Player player, NodePath path) {
         var language = player == null ? defaultLanguage : languageService.getPlayerLanguage(player);
-        return localization.langNode(language).node(path).getString();
+        return getString(language, path);
     }
 
     @Override
@@ -113,12 +160,7 @@ public class PaperMessenger implements Messenger<CommandSender, Player> {
 
     @Override
     public List<Component> componentList(Language language, NodePath path, Player player, TagResolver... resolvers) {
-        List<String> messageStringList;
-        try {
-            messageStringList = localization.langNode(language != null ? language : defaultLanguage).node(path).getList(String.class);
-        } catch (SerializationException e) {
-            return List.of(Component.text(notAvailable(path)));
-        }
+        var messageStringList = getStringList(language, path);
 
         if (messageStringList == null || messageStringList.isEmpty()) {
             return List.of(Component.text(notAvailable(path)));
@@ -138,6 +180,10 @@ public class PaperMessenger implements Messenger<CommandSender, Player> {
 
     @Override
     public Component component(Language language, NodePath path, Player player, TagResolver... resolvers) {
+        if (localization.langNode(language != null ? language : defaultLanguage).isList()) {
+            return componentFromList(language, path, player, resolvers);
+        }
+
         var messageString = getStringOrNotAvailable(language != null ? language : defaultLanguage, path);
 
         var papiParsedString = papiAvailable && player != null ? PlaceholderAPI.setPlaceholders(player, messageString) : messageString;
@@ -150,7 +196,7 @@ public class PaperMessenger implements Messenger<CommandSender, Player> {
 
     @Override
     public Component component(Language language, NodePath path, TagResolver... resolvers) {
-        return component(language != null ? language : defaultLanguage, path, null, resolvers);
+        return component(language, path, null, resolvers);
     }
 
     @Override
@@ -166,8 +212,23 @@ public class PaperMessenger implements Messenger<CommandSender, Player> {
     }
 
     @Override
-    public void broadcastTitle(Collection<Player> players, NodePath pathTitle, NodePath pathSubTitle, Title.Times times, TagResolver... tagResolvers) {
+    public void broadcastTitle(Collection<? extends Player> players, NodePath pathTitle, NodePath pathSubTitle, Title.Times times, TagResolver... tagResolvers) {
         players.forEach(player -> sendTitle(player, pathTitle, pathSubTitle, times, tagResolvers));
+    }
+
+    @Override
+    public void broadcastTitle(Collection<? extends Player> players, NodePath pathTitle, NodePath pathSubTitle, TagResolver... tagResolvers) {
+        broadcastTitle(players, pathTitle, pathSubTitle, Title.Times.times(Duration.ZERO, Duration.ofSeconds(3), Duration.ZERO), tagResolvers);
+    }
+
+    @Override
+    public void broadcastTitle(NodePath pathTitle, NodePath pathSubTitle, Title.Times times, TagResolver... tagResolvers) {
+        broadcastTitle(Bukkit.getOnlinePlayers(), pathTitle, pathSubTitle, times, tagResolvers);
+    }
+
+    @Override
+    public void broadcastTitle(NodePath pathTitle, NodePath pathSubTitle, TagResolver... tagResolvers) {
+        broadcastTitle(Bukkit.getOnlinePlayers(), pathTitle, pathSubTitle, tagResolvers);
     }
 
     @Override
@@ -180,8 +241,13 @@ public class PaperMessenger implements Messenger<CommandSender, Player> {
     }
 
     @Override
-    public void broadcastActionBar(Collection<Player> players, NodePath path, TagResolver... tagResolvers) {
+    public void broadcastActionBar(Collection<? extends Player> players, NodePath path, TagResolver... tagResolvers) {
         players.forEach(player -> sendActionBar(player, path, tagResolvers));
+    }
+
+    @Override
+    public void broadcastActionBar(NodePath path, TagResolver... tagResolvers) {
+        broadcastActionBar(Bukkit.getOnlinePlayers(), path, tagResolvers);
     }
 
     @Override
@@ -194,7 +260,12 @@ public class PaperMessenger implements Messenger<CommandSender, Player> {
     }
 
     @Override
-    public void broadcastMessage(Collection<Player> players, NodePath path, TagResolver... tagResolvers) {
+    public void broadcastMessage(Collection<? extends Player> players, NodePath path, TagResolver... tagResolvers) {
         players.forEach(player -> sendMessage(player, path, tagResolvers));
+    }
+
+    @Override
+    public void broadcastMessage(NodePath path, TagResolver... tagResolvers) {
+        broadcastMessage(Bukkit.getOnlinePlayers(), path, tagResolvers);
     }
 }
