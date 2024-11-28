@@ -2,6 +2,7 @@ package de.unknowncity.astralib.paper.api.plugin;
 
 import de.unknowncity.astralib.common.command.CommandRegistry;
 import de.unknowncity.astralib.common.hook.HookRegistry;
+import de.unknowncity.astralib.common.io.ResourceUtils;
 import de.unknowncity.astralib.common.plugin.AstraPlugin;
 import de.unknowncity.astralib.common.service.AstraLanguageService;
 import de.unknowncity.astralib.common.service.ServiceRegistry;
@@ -145,25 +146,7 @@ public class PaperAstraPlugin extends JavaPlugin implements AstraPlugin {
 
     @Override
     public void saveDefaultResource(String from, Path to) {
-        if (Files.exists(getDataPath().resolve(to))) {
-            return;
-        }
-
-        try (var resourceAsStream = getClassLoader().getResourceAsStream(from)) {
-            if (resourceAsStream == null) {
-                getLogger().log(
-                        Level.SEVERE, "Failed to save " + from + ". " +
-                                "The plugin developer tried to save a file that does not exist in the plugins jar file!"
-                );
-                return;
-            }
-            Files.createDirectories(getDataPath().resolve(to.getParent()));
-            try (var outputStream = Files.newOutputStream(getDataPath().resolve(to))) {
-                resourceAsStream.transferTo(outputStream);
-            }
-        } catch (IOException e) {
-            getLogger().log(Level.SEVERE, "Failed to save " + from, e);
-        }
+        ResourceUtils.saveDefaultResource(from, to, getDataPath(), getClassLoader(), getLogger());
     }
 
     @Override

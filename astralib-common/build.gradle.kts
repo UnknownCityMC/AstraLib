@@ -19,6 +19,7 @@ dependencies {
     compileOnly(libs.sadu.sqlite)
     compileOnly(libs.sadu.queries)
     compileOnly(libs.sadu.datasource)
+
     compileOnly(libs.jackson.yaml)
     compileOnly(libs.jackson.toml)
 
@@ -28,8 +29,7 @@ dependencies {
     testImplementation(platform("org.junit:junit-bom:5.9.1"))
     testImplementation("org.junit.jupiter:junit-jupiter")
 
-    testImplementation(libs.jackson.yaml)
-    testImplementation(libs.jackson.toml)
+    testCompileOnly(libs.jackson.yaml)
 }
 
 

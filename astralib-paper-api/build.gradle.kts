@@ -1,6 +1,7 @@
 plugins {
     `maven-publish`
     `java-library`
+    alias(libs.plugins.shadow)
 }
 
 val shadeBasePath = "${rootProject.group}.libs."
@@ -38,6 +39,19 @@ tasks {
     test {
         useJUnitPlatform()
     }
+
+    shadowJar {
+        fun relocateDependency(from : String) = relocate(from, "$shadeBasePath$from")
+        relocateDependency("com.fasterxml")
+
+
+        dependencies {
+            exclude("de.chojo")
+            exclude("redis")
+            exclude("com.google")
+            exclude("com.zaxxer")
+        }
+    }
 }
 
 publishing {
@@ -59,7 +73,7 @@ publishing {
 
     publications {
         register<MavenPublication>("maven") {
-            from(components["java"])
+            from(components["shadow"])
             group = rootProject.group
             artifactId = project.name
             version = rootProject.version.toString()

@@ -23,10 +23,10 @@ dependencies {
     bukkitLibrary(libs.configurate.yaml)
     bukkitLibrary(libs.configurate.hocon)
 
+    bukkitLibrary(libs.redis)
+
     implementation(libs.jackson.yaml)
     implementation(libs.jackson.toml)
-
-    bukkitLibrary(libs.redis)
 
     bukkitLibrary(libs.sadu.mysql)
     bukkitLibrary(libs.sadu.mariadb)
@@ -70,5 +70,10 @@ tasks {
 
         fun relocateDependency(from : String) = relocate(from, "$shadeBasePath$from")
         relocateDependency("com.fasterxml")
+    }
+
+    runServer {
+        minecraftVersion("1.21.3")
+        jvmArgs("-Dcom.mojang.eula.agree=true")
     }
 }

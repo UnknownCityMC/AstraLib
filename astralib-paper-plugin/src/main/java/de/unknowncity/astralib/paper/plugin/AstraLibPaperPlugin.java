@@ -1,7 +1,7 @@
 package de.unknowncity.astralib.paper.plugin;
 
-import de.unknowncity.astralib.common.configuration.YamlAstraConfiguration;
 import de.unknowncity.astralib.common.database.StandardDataBaseProvider;
+import de.unknowncity.astralib.common.io.ResourceUtils;
 import de.unknowncity.astralib.common.message.lang.Localization;
 import de.unknowncity.astralib.paper.api.lib.AstraLibPaper;
 import de.unknowncity.astralib.paper.api.message.PaperMessenger;
@@ -11,6 +11,8 @@ import de.unknowncity.astralib.paper.plugin.database.service.LanguageService;
 import de.unknowncity.astralib.paper.plugin.listener.PlayerJoinListener;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.nio.file.Path;
 
 public class AstraLibPaperPlugin extends JavaPlugin {
     private PaperMessenger messenger;
@@ -36,6 +38,9 @@ public class AstraLibPaperPlugin extends JavaPlugin {
     }
 
     public PaperMessenger initMesseneger() {
+        ResourceUtils.saveDefaultResource("lang/de_DE.yml", Path.of("lang/de_DE.yml"), getDataPath(), getClassLoader(), getLogger());
+        ResourceUtils.saveDefaultResource("lang/en_US.yml", Path.of("lang/en_US.yml"), getDataPath(), getClassLoader(), getLogger());
+
         var localization = Localization.builder(getDataPath().resolve("lang"))
                 .withLogger(getLogger())
                 .buildAndLoad();
