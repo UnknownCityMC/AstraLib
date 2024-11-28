@@ -204,7 +204,7 @@ public class PaperMessenger implements Messenger<CommandSender, Player> {
         var language = languageService.getPlayerLanguage(player);
 
         var title = component(language, pathTitle, player, tagResolvers);
-        var subtitle = component(language, pathTitle, player, tagResolvers);
+        var subtitle = component(language, pathSubTitle, player, tagResolvers);
 
         player.showTitle(Title.title(
                 title, subtitle, times
