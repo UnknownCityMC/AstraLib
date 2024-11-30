@@ -12,7 +12,9 @@ import de.unknowncity.astralib.paper.api.lib.AstraLibPaper;
 import de.unknowncity.astralib.paper.api.message.PaperMessenger;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitTask;
 import org.incendo.cloud.CommandManager;
 import org.incendo.cloud.caption.CaptionProvider;
 import org.incendo.cloud.caption.CaptionRegistry;
@@ -62,6 +64,40 @@ public class PaperAstraPlugin extends JavaPlugin implements AstraPlugin {
         // Plugin exclusive logic starts here
         onPluginEnable();
     }
+
+    /**
+     * Registers one or multiple listeners
+     * Shortcut for registering listeners though calling the PluginManager
+     * @param listeners one or multiple listeners to register
+     */
+    public void regsterListeners(Listener... listeners) {
+        for (Listener listener : listeners) {
+            getServer().getPluginManager().registerEvents(listener, this);
+        }
+    }
+
+    // Shortcuts for scheduler tasks
+    public BukkitTask runTask(Runnable runnable) {
+        return getServer().getScheduler().runTask(this, runnable);
+    }
+
+    public BukkitTask runTaskLater(Runnable runnable, long delay) {
+        return getServer().getScheduler().runTaskLater(this, runnable, delay);
+    }
+
+    public BukkitTask runTaskAsynchronously(Runnable runnable) {
+        return getServer().getScheduler().runTaskAsynchronously(this, runnable);
+    }
+
+    public BukkitTask runTaskTimer(Runnable runnable, long delay, long period) {
+        return getServer().getScheduler().runTaskTimer(this, runnable, delay, period);
+    }
+
+    public BukkitTask runTaskTimerAsynchronously(Runnable runnable, long delay, long period) {
+        return getServer().getScheduler().runTaskTimerAsynchronously(this, runnable, delay, period);
+    }
+
+    // Method to initialize command manager using captions of the lib messenger
 
     @ApiStatus.Internal
     public void initializeCommandManager(PaperMessenger messenger) {
@@ -125,10 +161,15 @@ public class PaperAstraPlugin extends JavaPlugin implements AstraPlugin {
         );
     }
 
+    @ApiStatus.Internal
     private void registerDefaultHooks() {
         hookRegistry.register(new PlaceholderApiHook(this));
     }
 
+    /**
+     * Get the plugins data path
+     * @return the plugins data path
+     */
     @Override
     public @NotNull Path getDataPath() {
         return super.getDataPath();
@@ -139,26 +180,47 @@ public class PaperAstraPlugin extends JavaPlugin implements AstraPlugin {
         onPluginDisable();
     }
 
+    /**
+     * Disables this plugin
+     * Example use case: Configuration failed to load
+     */
     @Override
     public void disableSelf() {
         this.getServer().getPluginManager().disablePlugin(this);
     }
 
+    /**
+     * Saves a resource from the plugin jar to a location in the plugins data folder
+     * @param from the resources location in the jar
+     * @param to the location the resource should be saved to, starting from the plugins data folder
+     */
     @Override
     public void saveDefaultResource(String from, Path to) {
         ResourceUtils.saveDefaultResource(from, to, getDataPath(), getClassLoader(), getLogger());
     }
 
+    /**
+     * Called after the internal hooks into AstraLib have been called
+     * Use this instead of onEnable when creating a plugin using AstraLib
+     */
     @Override
     public void onPluginEnable() {
 
     }
 
+    /**
+     * Called after the internal hooks into AstraLib have been shut down
+     * Use this instead of onDisable when creating a plugin using AstraLib
+     */
     @Override
     public void onPluginDisable() {
 
     }
 
+    /**
+     * Get the plugins cloud command manager
+     * @return the plugins command manager
+     */
     public CommandManager<CommandSender> commandManager() {
         return commandManager;
     }
