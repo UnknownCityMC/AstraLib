@@ -2,6 +2,7 @@ package de.unknowncity.astralib.common.message;
 
 import de.unknowncity.astralib.common.hook.PluginHook;
 import de.unknowncity.astralib.common.message.lang.Language;
+import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.kyori.adventure.title.Title;
