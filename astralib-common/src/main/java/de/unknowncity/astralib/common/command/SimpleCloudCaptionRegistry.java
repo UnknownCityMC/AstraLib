@@ -5,7 +5,7 @@ import org.incendo.cloud.CommandManager;
 
 public class SimpleCloudCaptionRegistry{
 
-    public static <C, P> void registerDefaultCaptions(CommandManager<C> commandManager, Messenger<C, P> messenger) {
+    public static <C, P> void registerDefaultCaptions(CommandManager<C> commandManager, Messenger<P> messenger) {
 
     }
 }
