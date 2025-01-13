@@ -44,7 +44,7 @@ public class AstraLibPaperPlugin extends JavaPlugin {
         var localization = Localization.builder(getDataPath().resolve("lang"))
                 .withLogger(getLogger())
                 .buildAndLoad();
-        return PaperMessenger.builder(localization)
+        return PaperMessenger.builder(localization, getPluginMeta())
                 .withDefaultLanguage(configuration.languageSetting().defaultLanguage())
                 .withLanguageService(languageService)
                 .build();

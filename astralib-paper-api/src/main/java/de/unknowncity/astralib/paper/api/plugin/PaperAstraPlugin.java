@@ -25,8 +25,6 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.configurate.NodePath;
 
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.logging.Level;
 
@@ -116,47 +114,47 @@ public class PaperAstraPlugin extends JavaPlugin implements AstraPlugin {
 
         captionRegistry.registerProvider(
                 CaptionProvider.forCaption(StandardCaptionKeys.ARGUMENT_PARSE_FAILURE_CHAR,
-                        sender ->  messenger.getString(sender instanceof Player player ? player : null,
+                        sender ->  messenger.getNullableString(sender instanceof Player player ? player : null,
                                 NodePath.path("exception", "argument-parse", "char")))
         );
         captionRegistry.registerProvider(
                 CaptionProvider.forCaption(StandardCaptionKeys.ARGUMENT_PARSE_FAILURE_COLOR,
-                        sender -> messenger.getString(sender instanceof Player player ? player : null,
+                        sender -> messenger.getNullableString(sender instanceof Player player ? player : null,
                                 NodePath.path("exception", "argument-parse", "color")))
         );
         captionRegistry.registerProvider(
                 CaptionProvider.forCaption(StandardCaptionKeys.ARGUMENT_PARSE_FAILURE_DURATION,
-                        sender -> messenger.getString(sender instanceof Player player ? player : null,
+                        sender -> messenger.getNullableString(sender instanceof Player player ? player : null,
                                 NodePath.path("exception", "argument-parse", "duration")))
         );
         captionRegistry.registerProvider(
                 CaptionProvider.forCaption(StandardCaptionKeys.ARGUMENT_PARSE_FAILURE_ENUM,
-                        sender -> messenger.getString(sender instanceof Player player ? player : null,
+                        sender -> messenger.getNullableString(sender instanceof Player player ? player : null,
                                 NodePath.path("exception", "argument-parse", "enum")))
         );
         captionRegistry.registerProvider(
                 CaptionProvider.forCaption(StandardCaptionKeys.ARGUMENT_PARSE_FAILURE_NUMBER,
-                        sender -> messenger.getString(sender instanceof Player player ? player : null,
+                        sender -> messenger.getNullableString(sender instanceof Player player ? player : null,
                                 NodePath.path("exception", "argument-parse", "number")))
         );
         captionRegistry.registerProvider(
                 CaptionProvider.forCaption(StandardCaptionKeys.ARGUMENT_PARSE_FAILURE_STRING,
-                        sender -> messenger.getString(sender instanceof Player player ? player : null,
+                        sender -> messenger.getNullableString(sender instanceof Player player ? player : null,
                                 NodePath.path("exception", "argument-parse", "string")))
         );
         captionRegistry.registerProvider(
                 CaptionProvider.forCaption(StandardCaptionKeys.ARGUMENT_PARSE_FAILURE_REGEX,
-                        sender -> messenger.getString(sender instanceof Player player ? player : null,
+                        sender -> messenger.getNullableString(sender instanceof Player player ? player : null,
                                 NodePath.path("exception", "argument-parse", "regex")))
         );
         captionRegistry.registerProvider(
                 CaptionProvider.forCaption(StandardCaptionKeys.ARGUMENT_PARSE_FAILURE_UUID,
-                        sender -> messenger.getString(sender instanceof Player player ? player : null,
+                        sender -> messenger.getNullableString(sender instanceof Player player ? player : null,
                                 NodePath.path("exception", "argument-parse", "uuid")))
         );
         captionRegistry.registerProvider(
                 CaptionProvider.forCaption(StandardCaptionKeys.ARGUMENT_PARSE_FAILURE_BOOLEAN,
-                        sender -> messenger.getString(sender instanceof Player player ? player : null,
+                        sender -> messenger.getNullableString(sender instanceof Player player ? player : null,
                                 NodePath.path("exception", "argument-parse", "boolean")))
         );
     }

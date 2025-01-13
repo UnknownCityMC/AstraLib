@@ -6,25 +6,25 @@ import de.unknowncity.astralib.common.message.lang.Language;
 import de.unknowncity.astralib.common.message.lang.Localization;
 import de.unknowncity.astralib.common.service.FallbackLanguageService;
 import de.unknowncity.astralib.paper.api.hook.defaulthooks.PlaceholderApiHook;
+import io.papermc.paper.plugin.configuration.PluginMeta;
 import me.clip.placeholderapi.PlaceholderAPI;
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.spongepowered.configurate.NodePath;
 import org.spongepowered.configurate.serialize.SerializationException;
 
 import java.time.Duration;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
-public class PaperMessenger implements Messenger<CommandSender, Player> {
+public class PaperMessenger implements Messenger<Player> {
     private final Localization localization;
     private final Language defaultLanguage;
     private final AstraLanguageService<Player> languageService;
@@ -33,8 +33,18 @@ public class PaperMessenger implements Messenger<CommandSender, Player> {
     private final int defaultFadeInDuration ;
     private final int defaultStayDuration;
     private final int defaultFadeOutDuration;
+    private PluginMeta pluginMeta;
 
-    private PaperMessenger(Localization localization, Language defaultLanguage, AstraLanguageService<Player> languageService, boolean papiAvailable, int defaultFadeInDuration, int defaultStayDuration, int defaultFadeOutDuration) {
+    private PaperMessenger(
+            Localization localization,
+            Language defaultLanguage,
+            AstraLanguageService<Player> languageService,
+            boolean papiAvailable,
+            int defaultFadeInDuration,
+            int defaultStayDuration,
+            int defaultFadeOutDuration,
+            PluginMeta pluginMeta
+    ) {
         this.localization = localization;
         this.defaultLanguage = defaultLanguage;
         this.languageService = languageService;
@@ -43,10 +53,11 @@ public class PaperMessenger implements Messenger<CommandSender, Player> {
         this.defaultFadeOutDuration = defaultFadeOutDuration;
         this.miniMessage = MiniMessage.miniMessage();
         this.papiAvailable = papiAvailable;
+        this.pluginMeta = pluginMeta;
     }
 
-    public static Builder builder(Localization localization) {
-        return new PaperMessenger.Builder(localization);
+    public static Builder builder(Localization localization, PluginMeta pluginMeta) {
+        return new PaperMessenger.Builder(localization, pluginMeta);
     }
 
     public static class Builder {
@@ -57,9 +68,11 @@ public class PaperMessenger implements Messenger<CommandSender, Player> {
         private int defaultFadeInDuration = 0;
         private int defaultStayDuration = 1;
         private int defaultFadeOutDuration = 0;
+        private PluginMeta pluginMeta;
 
-        public Builder(Localization localization) {
+        public Builder(Localization localization, PluginMeta pluginMeta) {
             this.localization = localization;
+            this.pluginMeta = pluginMeta;
         }
 
         public Builder withDefaultLanguage(Language defaultLanguage) {
@@ -103,7 +116,8 @@ public class PaperMessenger implements Messenger<CommandSender, Player> {
                     papiAvailable,
                     defaultFadeInDuration,
                     defaultStayDuration,
-                    defaultFadeOutDuration
+                    defaultFadeOutDuration,
+                    pluginMeta
             );
         }
     }
@@ -115,17 +129,26 @@ public class PaperMessenger implements Messenger<CommandSender, Player> {
 
     @Override
     public String notAvailable(NodePath path) {
-        return "N/A " + path;
+        return "N/A (" + pluginMeta.getName() + ") " + path;
     }
 
     @Override
     public String getStringOrNotAvailable(Language language, NodePath path) {
-        return Objects.requireNonNullElseGet(getString(language != null ? language : defaultLanguage, path), () ->  notAvailable(path));
+        return Objects.requireNonNullElseGet(getNullableString(language != null ? language : defaultLanguage, path), () ->  notAvailable(path));
+    }
+
+    public String getStringOrNotAvailable(Player player, NodePath path) {
+        return getStringOrNotAvailable(languageService.getPlayerLanguage(player), path);
     }
 
     @Override
-    public String getString(Language language, NodePath path) {
+    public String getNullableString(Language language, NodePath path) {
         return localization.langNode(language != null ? language : defaultLanguage).node(path).getString();
+    }
+
+    public String getNullableString(Player player, NodePath path) {
+        var language = player == null ? defaultLanguage : languageService.getPlayerLanguage(player);
+        return getNullableString(language, path);
     }
 
     @Override
@@ -139,11 +162,6 @@ public class PaperMessenger implements Messenger<CommandSender, Player> {
         return list;
     }
 
-    public String getString(Player player, NodePath path) {
-        var language = player == null ? defaultLanguage : languageService.getPlayerLanguage(player);
-        return getString(language, path);
-    }
-
     @Override
     public Component componentFromList(Language language, NodePath path, Player player, TagResolver... resolvers) {
         var componentList = componentList(language != null ? language : defaultLanguage, path, player, resolvers);
@@ -155,7 +173,11 @@ public class PaperMessenger implements Messenger<CommandSender, Player> {
 
     @Override
     public Component componentFromList(Language language, NodePath path, TagResolver... resolvers) {
-        return componentFromList(language != null ? language : defaultLanguage, path, null, resolvers);
+        return componentFromList(language != null ? language : defaultLanguage , path, null, resolvers);
+    }
+
+    public Component componentFromList(Player player, NodePath path, TagResolver... resolvers) {
+        return componentFromList(languageService.getPlayerLanguage(player), path, null, resolvers);
     }
 
     @Override
@@ -178,6 +200,10 @@ public class PaperMessenger implements Messenger<CommandSender, Player> {
         return componentList(language, path, null, resolvers);
     }
 
+    public List<Component> componentList(Player player, NodePath path, TagResolver... resolvers) {
+        return componentList(languageService.getPlayerLanguage(player), path, null, resolvers);
+    }
+
     @Override
     public Component component(Language language, NodePath path, Player player, TagResolver... resolvers) {
         if (localization.langNode(language != null ? language : defaultLanguage).isList()) {
@@ -198,6 +224,11 @@ public class PaperMessenger implements Messenger<CommandSender, Player> {
     public Component component(Language language, NodePath path, TagResolver... resolvers) {
         return component(language, path, null, resolvers);
     }
+
+    public Component component(Player player, NodePath path, TagResolver... resolvers) {
+        return component(languageService.getPlayerLanguage(player), path, null, resolvers);
+    }
+
 
     @Override
     public void sendTitle(Player player, NodePath pathTitle, NodePath pathSubTitle, Title.Times times, TagResolver... tagResolvers) {
@@ -251,12 +282,12 @@ public class PaperMessenger implements Messenger<CommandSender, Player> {
     }
 
     @Override
-    public void sendMessage(CommandSender commandSender, NodePath path, TagResolver... tagResolvers) {
-        var language = commandSender instanceof Player player ? languageService.getPlayerLanguage(player) : defaultLanguage;
+    public void sendMessage(Audience audience, NodePath path, TagResolver... tagResolvers) {
+        var language = audience instanceof Player player ? languageService.getPlayerLanguage(player) : defaultLanguage;
 
-        var message = component(language, path, commandSender instanceof Player player ? player : null, tagResolvers);
+        var message = component(language, path, audience instanceof Player player ? player : null, tagResolvers);
 
-        commandSender.sendMessage(message);
+        audience.sendMessage(message);
     }
 
     @Override

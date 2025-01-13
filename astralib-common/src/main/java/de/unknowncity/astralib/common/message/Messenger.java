@@ -1,8 +1,7 @@
 package de.unknowncity.astralib.common.message;
 
-import de.unknowncity.astralib.common.hook.PluginHook;
 import de.unknowncity.astralib.common.message.lang.Language;
-import net.kyori.adventure.sound.Sound;
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.kyori.adventure.title.Title;
@@ -11,7 +10,7 @@ import org.spongepowered.configurate.NodePath;
 import java.util.Collection;
 import java.util.List;
 
-public interface Messenger<C, P> {
+public interface Messenger<P> {
 
     /**
      * Retrieves the not available string for a language string
@@ -36,7 +35,7 @@ public interface Messenger<C, P> {
      * @param path The path to the language string in the language configuration
      * @return A plain language string
      */
-     String getString(Language language, NodePath path);
+     String getNullableString(Language language, NodePath path);
 
     /**
      * Retrieves a multiline language string as is
@@ -148,11 +147,11 @@ public interface Messenger<C, P> {
 
     /**
      * Sends a message and subtitle to the given command sender
-     * @param commandSender The command sender to send the message to
+     * @param audience The auucience to send the message to
      * @param path The path to the title language string in the language configuration
      * @param tagResolvers Optional placeholders and their replacements
      */
-    void sendMessage(C commandSender, NodePath path, TagResolver... tagResolvers);
+    void sendMessage(Audience audience, NodePath path, TagResolver... tagResolvers);
 
     /**
      * Sends a message and subtitle to all online players or a  collection of players
