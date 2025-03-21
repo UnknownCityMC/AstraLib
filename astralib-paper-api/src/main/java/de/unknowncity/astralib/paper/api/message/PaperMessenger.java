@@ -218,7 +218,7 @@ public class PaperMessenger implements Messenger<Player> {
 
     @Override
     public Component component(Language language, NodePath path, Player player, TagResolver... resolvers) {
-        if (localization.langNode(language != null ? language : defaultLanguage).isList()) {
+        if (localization.langNode(language != null ? language : defaultLanguage).node(path).isList()) {
             return componentFromList(language, path, player, resolvers);
         }
 
