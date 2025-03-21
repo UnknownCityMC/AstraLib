@@ -22,7 +22,8 @@ cloud-confirm = "1.0.0-rc.1"
 
 # Storage
 redis = "5.1.0"
-sadu = "2.2.2"
+sadu = "2.3.1"
+mariadb = "3.5.2"
 
 # Testing
 junit = "2.11.5"
@@ -56,6 +57,7 @@ sadu-mysql = { group = "de.chojo.sadu", name = "sadu-mysql", version.ref = "sadu
 sadu-mariadb = { group = "de.chojo.sadu", name = "sadu-mariadb", version.ref = "sadu" }
 sadu-postgresql = { group = "de.chojo.sadu", name = "sadu-postgresql", version.ref = "sadu" }
 sadu-sqlite = { group = "de.chojo.sadu", name = "sadu-sqlite", version.ref = "sadu" }
+mariadb-client = { group = "org.mariadb.jdbc", name = "mariadb-java-client", version.ref = "mariadb" }
 
 # Testing
 # junit = { group = "", name = "", version.ref = "junit" }

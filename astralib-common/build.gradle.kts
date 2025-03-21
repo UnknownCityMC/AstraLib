@@ -19,6 +19,7 @@ dependencies {
     compileOnly(libs.sadu.sqlite)
     compileOnly(libs.sadu.queries)
     compileOnly(libs.sadu.datasource)
+    compileOnly(libs.mariadb.client)
 
     compileOnly(libs.jackson.yaml)
     compileOnly(libs.jackson.toml)

@@ -70,7 +70,7 @@ public class StandardDataBaseProvider {
                                 .password(dataBaseSetting.password())
                                 .database(dataBaseSetting.database())
                                 .host(dataBaseSetting.host())
-                                .driverClass(Driver.class)
+                                .driverClass(org.mariadb.jdbc.Driver.class)
                         )
                         .create()
                         .withMaximumPoolSize(dataBaseSetting.maxPoolSize())
