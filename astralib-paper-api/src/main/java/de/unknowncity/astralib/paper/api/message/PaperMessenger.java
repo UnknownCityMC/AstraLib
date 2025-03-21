@@ -14,6 +14,7 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.kyori.adventure.title.Title;
+import org.apache.maven.model.Build;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.spongepowered.configurate.NodePath;
@@ -23,6 +24,7 @@ import java.time.Duration;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.logging.Logger;
 
 public class PaperMessenger implements Messenger<Player> {
     private final Localization localization;
@@ -34,6 +36,7 @@ public class PaperMessenger implements Messenger<Player> {
     private final int defaultStayDuration;
     private final int defaultFadeOutDuration;
     private PluginMeta pluginMeta;
+    private Logger logger;
 
     private PaperMessenger(
             Localization localization,
@@ -43,7 +46,8 @@ public class PaperMessenger implements Messenger<Player> {
             int defaultFadeInDuration,
             int defaultStayDuration,
             int defaultFadeOutDuration,
-            PluginMeta pluginMeta
+            PluginMeta pluginMeta,
+            Logger logger
     ) {
         this.localization = localization;
         this.defaultLanguage = defaultLanguage;
@@ -54,6 +58,7 @@ public class PaperMessenger implements Messenger<Player> {
         this.miniMessage = MiniMessage.miniMessage();
         this.papiAvailable = papiAvailable;
         this.pluginMeta = pluginMeta;
+        this.logger = logger;
     }
 
     public static Builder builder(Localization localization, PluginMeta pluginMeta) {
@@ -69,6 +74,7 @@ public class PaperMessenger implements Messenger<Player> {
         private int defaultStayDuration = 1;
         private int defaultFadeOutDuration = 0;
         private PluginMeta pluginMeta;
+        private Logger logger = Logger.getLogger("PaperMessenger");
 
         public Builder(Localization localization, PluginMeta pluginMeta) {
             this.localization = localization;
@@ -105,6 +111,11 @@ public class PaperMessenger implements Messenger<Player> {
             return Builder.this;
         }
 
+        public Builder withLogger(Logger logger) {
+            Builder.this.logger = logger;
+            return Builder.this;
+        }
+
         public PaperMessenger build() {
             if (languageService == null) {
                 languageService = FallbackLanguageService.create(defaultLanguage);
@@ -117,7 +128,8 @@ public class PaperMessenger implements Messenger<Player> {
                     defaultFadeInDuration,
                     defaultStayDuration,
                     defaultFadeOutDuration,
-                    pluginMeta
+                    pluginMeta,
+                    logger
             );
         }
     }
@@ -153,11 +165,11 @@ public class PaperMessenger implements Messenger<Player> {
 
     @Override
     public List<String> getStringList(Language language, NodePath path) {
-        List<String> list;
+        List<String> list = null;
         try {
             list = localization.langNode(language != null ? language : defaultLanguage).node(path).getList(String.class);
         } catch (SerializationException e) {
-            throw new RuntimeException(e);
+            logger.severe(e.getMessage());
         }
         return list;
     }
