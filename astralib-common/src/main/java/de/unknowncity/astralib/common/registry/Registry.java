@@ -3,6 +3,7 @@ package de.unknowncity.astralib.common.registry;
 import de.unknowncity.astralib.common.registry.registrable.ClosableRegistrable;
 import de.unknowncity.astralib.common.registry.registrable.Registrable;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -51,5 +52,13 @@ public abstract class Registry<I, T extends Registrable<I>> {
         var possibleSetting = registered.stream().filter(registrableClass::isInstance).findFirst();
 
         return (possibleSetting.map(registrableClass::cast).orElse(null));
+    }
+
+    /**
+     * Gets all registered entries
+     * @return a set with all registered entries
+     */
+    public Set<Registrable<I>> getAllRegistered() {
+        return Collections.unmodifiableSet(registered);
     }
 }
