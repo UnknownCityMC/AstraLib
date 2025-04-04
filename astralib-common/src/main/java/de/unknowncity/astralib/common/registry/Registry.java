@@ -2,13 +2,14 @@ package de.unknowncity.astralib.common.registry;
 
 import de.unknowncity.astralib.common.registry.registrable.ClosableRegistrable;
 import de.unknowncity.astralib.common.registry.registrable.Registrable;
+import de.unknowncity.astralib.common.registry.registrable.StartableRegistrable;
 
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
 public abstract class Registry<I, T extends Registrable<I>> {
-    protected final Set<Registrable<I>> registered;
+    protected final Set<T> registered;
     protected final I plugin;
 
     public Registry(I plugin) {
@@ -20,8 +21,11 @@ public abstract class Registry<I, T extends Registrable<I>> {
      * Register a new registrable
      * @param registrable an instance of a new registrable
      */
-    public void register(T registrable) {
+    public <R extends T>  void register(R registrable) {
         this.registered.add(registrable);
+        if (registrable instanceof StartableRegistrable<?> closable) {
+            closable.startup();
+        }
     }
 
     /**
@@ -37,7 +41,7 @@ public abstract class Registry<I, T extends Registrable<I>> {
             return;
         }
         var registrable = optionalRegistrable.get();
-        if (registrable instanceof ClosableRegistrable<I> closable) {
+        if (registrable instanceof ClosableRegistrable<?> closable) {
             closable.shutdown();
         }
         this.registered.remove(registrable);
