@@ -12,7 +12,7 @@ public class HookRegistry<I, H extends PluginHook<I>> extends Registry<I, H> {
      * @param registrable an instance of a plugin hook
      */
     @Override
-    public void register(H registrable) {
+    public <R extends H> void register(R registrable) {
         super.register(registrable);
         registrable.initialize();
     }
