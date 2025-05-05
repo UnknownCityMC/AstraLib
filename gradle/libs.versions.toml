@@ -2,7 +2,7 @@
 
 # Gradle Plugins
 shadow = "8.3.5"
-pluginyml = "0.6.0"
+pluginyml = "0.7.1"
 run = "2.3.1"
 
 # Paper
