@@ -16,7 +16,7 @@ papi = "2.11.5"
 
 # Commands
 cloud-core = "2.0.0-rc.2"
-cloud-paper = "2.0.0-beta.10"
+cloud-paper = "2.0.0-SNAPSHOT"
 cloud-minecraft-extras = "2.0.0-beta.10"
 cloud-confirm = "1.0.0-rc.1"
 
