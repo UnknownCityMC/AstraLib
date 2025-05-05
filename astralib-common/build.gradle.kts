@@ -26,7 +26,7 @@ dependencies {
     compileOnly(libs.adventure.text.minimessage)
     compileOnly(libs.adventure.api)
 
-    testImplementation(platform("org.junit:junit-bom:5.9.1"))
+    testImplementation(platform("org.junit:junit-bom:5.12.2"))
     testImplementation("org.junit.jupiter:junit-jupiter")
 
     testCompileOnly(libs.jackson.yaml)
