@@ -1,7 +1,7 @@
 [versions]
 
 # Gradle Plugins
-shadow = "8.3.5"
+shadow = "8.3.6"
 pluginyml = "0.6.0"
 run = "2.3.1"
 
