@@ -22,7 +22,7 @@ cloud-confirm = "1.0.0-rc.1"
 
 # Storage
 redis = "5.1.0"
-sadu = "2.2.2"
+sadu = "2.3.2"
 
 # Testing
 junit = "2.11.5"
