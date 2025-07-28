@@ -32,8 +32,8 @@ dependencies {
     api(libs.sadu.queries)
     api(libs.sadu.datasource)
     
-    testImplementation(platform("org.junit:junit-bom:5.10.3"))
-    testImplementation("org.junit.jupiter", "junit-jupiter", "5.10.3")
+    testImplementation(platform("org.junit:junit-bom:5.13.4"))
+    testImplementation("org.junit.jupiter", "junit-jupiter", "5.13.4")
 }
 
 java {
