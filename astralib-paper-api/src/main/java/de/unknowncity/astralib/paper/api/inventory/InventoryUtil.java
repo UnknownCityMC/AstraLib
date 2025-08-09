@@ -54,4 +54,12 @@ public class InventoryUtil {
                 .sum();
         return totalSpaceForItemType > amount;
     }
+
+    public static int getFreeSpace(Player player, ItemStack itemStack) {
+        return Arrays.stream(player.getInventory().getStorageContents())
+                .mapToInt(item -> item == null ? itemStack.getMaxStackSize() :
+                        item.isSimilar(itemStack) ? itemStack.getMaxStackSize() - item.getAmount() :
+                                0
+                ).sum();
+    }
 }
