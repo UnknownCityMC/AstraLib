@@ -62,7 +62,7 @@ public abstract class Registry<I, T extends Registrable<I>> {
      * Gets all registered entries
      * @return a set with all registered entries
      */
-    public Set<Registrable<I>> getAllRegistered() {
+    public Set<T> getAllRegistered() {
         return Collections.unmodifiableSet(registered);
     }
 }
