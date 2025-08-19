@@ -1,9 +1,9 @@
 package de.unknowncity.astralib.paper.api.message;
 
-import de.unknowncity.astralib.common.service.AstraLanguageService;
 import de.unknowncity.astralib.common.message.Messenger;
 import de.unknowncity.astralib.common.message.lang.Language;
 import de.unknowncity.astralib.common.message.lang.Localization;
+import de.unknowncity.astralib.common.service.AstraLanguageService;
 import de.unknowncity.astralib.common.service.FallbackLanguageService;
 import de.unknowncity.astralib.paper.api.hook.defaulthooks.PlaceholderApiHook;
 import io.papermc.paper.plugin.configuration.PluginMeta;
@@ -14,7 +14,6 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.kyori.adventure.title.Title;
-import org.apache.maven.model.Build;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.spongepowered.configurate.NodePath;
@@ -224,7 +223,7 @@ public class PaperMessenger implements Messenger<Player> {
 
         var messageString = getStringOrNotAvailable(language != null ? language : defaultLanguage, path);
 
-        var papiParsedString = papiAvailable && player != null ? PlaceholderAPI.setPlaceholders(player, messageString) : messageString;
+        var papiParsedString = papiAvailable ? PlaceholderAPI.setPlaceholders(player, messageString) : messageString;
         return miniMessage.deserialize(
                 papiParsedString,
                 TagResolver.resolver(resolvers),
