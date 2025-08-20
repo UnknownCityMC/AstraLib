@@ -16,6 +16,7 @@ public class ItemBuilder {
 
     private ItemBuilder(ItemStack itemStack) {
         this.item = itemStack.clone();
+        this.itemMeta = itemStack.getItemMeta();
     }
 
     public static ItemBuilder of(final Material material) {
