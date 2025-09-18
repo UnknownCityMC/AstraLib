@@ -19,6 +19,7 @@ dependencies {
     compileOnly(libs.sadu.sqlite)
     compileOnly(libs.sadu.queries)
     compileOnly(libs.sadu.datasource)
+    compileOnly(libs.mariadb.client)
 
     compileOnly(libs.jackson.yaml)
     compileOnly(libs.jackson.toml)
@@ -26,7 +27,7 @@ dependencies {
     compileOnly(libs.adventure.text.minimessage)
     compileOnly(libs.adventure.api)
 
-    testImplementation(platform("org.junit:junit-bom:5.9.1"))
+    testImplementation(platform("org.junit:junit-bom:5.13.2"))
     testImplementation("org.junit.jupiter:junit-jupiter")
 
     testCompileOnly(libs.jackson.yaml)

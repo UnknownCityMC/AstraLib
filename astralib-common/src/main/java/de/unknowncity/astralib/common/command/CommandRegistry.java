@@ -13,7 +13,7 @@ public class CommandRegistry<C, I> extends Registry<I, AbstractCommand<C, I>> {
 
 
     @Override
-    public void register(AbstractCommand<C, I> registrable) {
+    public <R extends AbstractCommand<C, I>> void register(R registrable) {
         super.register(registrable);
         registrable.apply(commandManager);
     }

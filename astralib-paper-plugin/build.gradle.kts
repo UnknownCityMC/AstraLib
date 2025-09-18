@@ -34,6 +34,7 @@ dependencies {
     bukkitLibrary(libs.sadu.sqlite)
     bukkitLibrary(libs.sadu.queries)
     bukkitLibrary(libs.sadu.datasource)
+    bukkitLibrary(libs.mariadb.client)
 
     compileOnly(libs.adventure.text.minimessage)
     compileOnly(libs.adventure.api)
@@ -73,7 +74,7 @@ tasks {
     }
 
     runServer {
-        minecraftVersion("1.21.3")
+        minecraftVersion("1.21.5")
         jvmArgs("-Dcom.mojang.eula.agree=true")
     }
 }

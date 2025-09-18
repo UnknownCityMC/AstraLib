@@ -9,7 +9,7 @@ plugins {
 }
 
 group = "de.unknowncity.astralib"
-version = "0.5.0-SNAPSHOT"
+version = "0.6.0-SNAPSHOT"
 
 dependencies {
     api(libs.configurate.yaml)
@@ -32,7 +32,7 @@ dependencies {
     api(libs.sadu.queries)
     api(libs.sadu.datasource)
     
-    testImplementation(platform("org.junit:junit-bom:5.10.3"))
+    testImplementation(platform("org.junit:junit-bom:5.13.2"))
     testImplementation("org.junit.jupiter", "junit-jupiter", "5.10.3")
 }
 

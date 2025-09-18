@@ -2,17 +2,21 @@ package de.unknowncity.astralib.paper.api.item;
 
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class ItemBuilder {
     private ItemStack item;
+    private ItemMeta itemMeta;
 
     private ItemBuilder(ItemStack itemStack) {
         this.item = itemStack.clone();
+        this.itemMeta = itemStack.getItemMeta();
     }
 
     public static ItemBuilder of(final Material material) {
@@ -33,23 +37,17 @@ public class ItemBuilder {
     }
 
     public ItemBuilder name(Component name) {
-        var itemMeta = this.item.getItemMeta();
         itemMeta.displayName(name);
-        this.item.setItemMeta(itemMeta);
         return this;
     }
 
     public ItemBuilder lore(Component... lore) {
-        var itemMeta = this.item.getItemMeta();
         itemMeta.lore(Arrays.asList(lore));
-        this.item.setItemMeta(itemMeta);
         return this;
     }
 
     public ItemBuilder lore(List<Component> lore) {
-        var itemMeta = this.item.getItemMeta();
         itemMeta.lore(lore);
-        this.item.setItemMeta(itemMeta);
         return this;
     }
 
@@ -64,13 +62,17 @@ public class ItemBuilder {
     }
 
     public ItemBuilder glow(boolean glow) {
-        var itemMeta = this.item.getItemMeta();
         itemMeta.setEnchantmentGlintOverride(glow);
-        this.item.setItemMeta(itemMeta);
+        return this;
+    }
+
+    public ItemBuilder itemModel(NamespacedKey namespacedKey) {
+        itemMeta.setItemModel(namespacedKey);
         return this;
     }
 
     public ItemStack item() {
+        this.item.setItemMeta(itemMeta);
         return item;
     }
 }

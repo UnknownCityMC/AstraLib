@@ -28,6 +28,9 @@ public class LanguageService implements AstraLanguageService<Player> {
     }
 
     public Language getPlayerLanguage(Player player) {
+        if (player == null) {
+            return getDefaultLanguage();
+        }
         var language = languageCache.get(player.getUniqueId());
         return language != null ? language : getDefaultLanguage();
     }

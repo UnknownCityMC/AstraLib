@@ -1,9 +1,9 @@
 package de.unknowncity.astralib.paper.api.message;
 
-import de.unknowncity.astralib.common.service.AstraLanguageService;
 import de.unknowncity.astralib.common.message.Messenger;
 import de.unknowncity.astralib.common.message.lang.Language;
 import de.unknowncity.astralib.common.message.lang.Localization;
+import de.unknowncity.astralib.common.service.AstraLanguageService;
 import de.unknowncity.astralib.common.service.FallbackLanguageService;
 import de.unknowncity.astralib.paper.api.hook.defaulthooks.PlaceholderApiHook;
 import io.papermc.paper.plugin.configuration.PluginMeta;
@@ -23,6 +23,7 @@ import java.time.Duration;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.logging.Logger;
 
 public class PaperMessenger implements Messenger<Player> {
     private final Localization localization;
@@ -34,6 +35,7 @@ public class PaperMessenger implements Messenger<Player> {
     private final int defaultStayDuration;
     private final int defaultFadeOutDuration;
     private PluginMeta pluginMeta;
+    private Logger logger;
 
     private PaperMessenger(
             Localization localization,
@@ -43,7 +45,8 @@ public class PaperMessenger implements Messenger<Player> {
             int defaultFadeInDuration,
             int defaultStayDuration,
             int defaultFadeOutDuration,
-            PluginMeta pluginMeta
+            PluginMeta pluginMeta,
+            Logger logger
     ) {
         this.localization = localization;
         this.defaultLanguage = defaultLanguage;
@@ -54,6 +57,7 @@ public class PaperMessenger implements Messenger<Player> {
         this.miniMessage = MiniMessage.miniMessage();
         this.papiAvailable = papiAvailable;
         this.pluginMeta = pluginMeta;
+        this.logger = logger;
     }
 
     public static Builder builder(Localization localization, PluginMeta pluginMeta) {
@@ -69,6 +73,7 @@ public class PaperMessenger implements Messenger<Player> {
         private int defaultStayDuration = 1;
         private int defaultFadeOutDuration = 0;
         private PluginMeta pluginMeta;
+        private Logger logger = Logger.getLogger("PaperMessenger");
 
         public Builder(Localization localization, PluginMeta pluginMeta) {
             this.localization = localization;
@@ -105,6 +110,11 @@ public class PaperMessenger implements Messenger<Player> {
             return Builder.this;
         }
 
+        public Builder withLogger(Logger logger) {
+            Builder.this.logger = logger;
+            return Builder.this;
+        }
+
         public PaperMessenger build() {
             if (languageService == null) {
                 languageService = FallbackLanguageService.create(defaultLanguage);
@@ -117,7 +127,8 @@ public class PaperMessenger implements Messenger<Player> {
                     defaultFadeInDuration,
                     defaultStayDuration,
                     defaultFadeOutDuration,
-                    pluginMeta
+                    pluginMeta,
+                    logger
             );
         }
     }
@@ -153,11 +164,11 @@ public class PaperMessenger implements Messenger<Player> {
 
     @Override
     public List<String> getStringList(Language language, NodePath path) {
-        List<String> list;
+        List<String> list = null;
         try {
             list = localization.langNode(language != null ? language : defaultLanguage).node(path).getList(String.class);
         } catch (SerializationException e) {
-            throw new RuntimeException(e);
+            logger.severe(e.getMessage());
         }
         return list;
     }
@@ -206,13 +217,13 @@ public class PaperMessenger implements Messenger<Player> {
 
     @Override
     public Component component(Language language, NodePath path, Player player, TagResolver... resolvers) {
-        if (localization.langNode(language != null ? language : defaultLanguage).isList()) {
+        if (localization.langNode(language != null ? language : defaultLanguage).node(path).isList()) {
             return componentFromList(language, path, player, resolvers);
         }
 
         var messageString = getStringOrNotAvailable(language != null ? language : defaultLanguage, path);
 
-        var papiParsedString = papiAvailable && player != null ? PlaceholderAPI.setPlaceholders(player, messageString) : messageString;
+        var papiParsedString = papiAvailable ? PlaceholderAPI.setPlaceholders(player, messageString) : messageString;
         return miniMessage.deserialize(
                 papiParsedString,
                 TagResolver.resolver(resolvers),
