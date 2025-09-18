@@ -11,7 +11,7 @@ paper-api = "1.21.7-R0.1-SNAPSHOT"
 # Config
 configurate = "4.2.0"
 jackson = "2.19.1"
-adventure = "4.15.0"
+adventure = "4.23.0"
 papi = "2.11.6"
 
 # Commands
