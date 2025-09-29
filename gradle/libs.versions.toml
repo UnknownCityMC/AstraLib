@@ -6,7 +6,7 @@ pluginyml = "0.7.1"
 run = "2.3.1"
 
 # Paper
-paper-api = "1.21.7-R0.1-SNAPSHOT"
+paper-api = "1.21.9-pre4-R0.1-SNAPSHOT"
 
 # Config
 configurate = "4.2.0"
