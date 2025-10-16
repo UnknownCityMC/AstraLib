@@ -48,7 +48,6 @@ public class AstraLibVelocityPlugin {
     @Subscribe
     public void onProxyShutdown(ProxyShutdownEvent event) {
         AstraLib.getRedis().shutdown();
-        AstraLib.getRedis().asyncCommands().
     }
 
     private void initializeConfiguration() {
