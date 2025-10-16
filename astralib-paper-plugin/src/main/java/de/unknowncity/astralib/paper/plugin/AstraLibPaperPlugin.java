@@ -35,15 +35,11 @@ public class AstraLibPaperPlugin extends JavaPlugin {
             languageService,
             messenger
         ), this, ServicePriority.High);
-        var redisService = new RedisService(RedisUriBuilder.build(configuration.redis()));
         var platform = new PaperAstraPlatform(this);
 
         AstraLib.initialize(
-                platform,
-                redisService
+                platform
         );
-
-
     }
 
     @Override

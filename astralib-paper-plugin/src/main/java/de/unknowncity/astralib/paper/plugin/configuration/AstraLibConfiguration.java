@@ -1,10 +1,8 @@
 package de.unknowncity.astralib.paper.plugin.configuration;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import de.unknowncity.astralib.common.configuration.YamlAstraConfiguration;
 import de.unknowncity.astralib.common.configuration.annotation.Config;
 import de.unknowncity.astralib.common.configuration.setting.defaults.ModernDataBaseSetting;
-import de.unknowncity.astralib.common.configuration.setting.defaults.ModernRedisSetting;
 import de.unknowncity.astralib.common.configuration.setting.defaults.RedisSetting;
 import de.unknowncity.astralib.paper.plugin.configuration.settings.LanguageSetting;
 

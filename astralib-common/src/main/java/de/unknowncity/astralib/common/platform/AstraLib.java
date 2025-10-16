@@ -11,9 +11,8 @@ public final class AstraLib {
 
     }
 
-    public static void initialize(AstraPlatform platform, RedisService redisService) {
+    public static void initialize(AstraPlatform platform) {
         AstraLib.platform = platform;
-        AstraLib.redisService = redisService;
     }
 
     public static AstraPlatform getPlatform() {

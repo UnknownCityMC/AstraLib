@@ -24,47 +24,51 @@ public class RedisService {
     private final Map<String, Consumer<RedisMessage<?>>> listeners = new ConcurrentHashMap<>();
 
     public RedisService(String redisUri) {
-        client = RedisClient.create(redisUri);
-        client.setOptions(io.lettuce.core.ClientOptions.builder()
-                .autoReconnect(true)
-                .pingBeforeActivateConnection(true)
-                .build()
-        );
+        try {
+            client = RedisClient.create(redisUri);
+            client.setOptions(io.lettuce.core.ClientOptions.builder()
+                    .autoReconnect(true)
+                    .pingBeforeActivateConnection(true)
+                    .build()
+            );
 
-        connection = client.connect();
-        asyncCommands = connection.async();
-        pubSubConnection = client.connectPubSub();
+            connection = client.connect();
+            asyncCommands = connection.async();
+            pubSubConnection = client.connectPubSub();
 
-        pubSubConnection.addListener(new RedisPubSubListener<String, String>() {
-            @Override
-            public void message(String channel, String messageJson) {
-                Consumer<RedisMessage<?>> listener = listeners.get(channel);
-                if (listener != null) {
-                    RedisMessage<?> msg = gson.fromJson(messageJson, RedisMessage.class);
-                    AstraLib.getPlatform().runSync(() -> listener.accept(msg));
+            pubSubConnection.addListener(new RedisPubSubListener<String, String>() {
+                @Override
+                public void message(String channel, String messageJson) {
+                    Consumer<RedisMessage<?>> listener = listeners.get(channel);
+                    if (listener != null) {
+                        RedisMessage<?> msg = gson.fromJson(messageJson, RedisMessage.class);
+                        AstraLib.getPlatform().runSync(() -> listener.accept(msg));
+                    }
                 }
-            }
 
-            @Override
-            public void message(String pattern, String channel, String message) {
-            }
+                @Override
+                public void message(String pattern, String channel, String message) {
+                }
 
-            @Override
-            public void subscribed(String channel, long count) {
-            }
+                @Override
+                public void subscribed(String channel, long count) {
+                }
 
-            @Override
-            public void psubscribed(String pattern, long count) {
-            }
+                @Override
+                public void psubscribed(String pattern, long count) {
+                }
 
-            @Override
-            public void unsubscribed(String channel, long count) {
-            }
+                @Override
+                public void unsubscribed(String channel, long count) {
+                }
 
-            @Override
-            public void punsubscribed(String pattern, long count) {
-            }
-        });
+                @Override
+                public void punsubscribed(String pattern, long count) {
+                }
+            });
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public <T> void publish(String channel, RedisMessage<T> message) {
