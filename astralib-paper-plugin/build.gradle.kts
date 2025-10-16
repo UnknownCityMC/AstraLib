@@ -11,10 +11,11 @@ val mainClass = "${rootProject.group}.paper.plugin.AstraLibPaperPlugin"
 val shadeBasePath = "${rootProject.group}.libs."
 
 dependencies {
-    implementation(project(":astralib-common"))
     implementation(project(":astralib-paper-api")) {
         exclude(group = "*", module = "*")
     }
+
+    compileOnly(project(":astralib-paper-api"))
 
     bukkitLibrary(libs.cloud.paper)
     bukkitLibrary(libs.cloud.extras)
@@ -23,17 +24,9 @@ dependencies {
     bukkitLibrary(libs.configurate.yaml)
     bukkitLibrary(libs.configurate.hocon)
 
-    bukkitLibrary(libs.redis)
-
     implementation(libs.jackson.yaml)
     implementation(libs.jackson.toml)
 
-    bukkitLibrary(libs.sadu.mysql)
-    bukkitLibrary(libs.sadu.mariadb)
-    bukkitLibrary(libs.sadu.postgresql)
-    bukkitLibrary(libs.sadu.sqlite)
-    bukkitLibrary(libs.sadu.queries)
-    bukkitLibrary(libs.sadu.datasource)
     bukkitLibrary(libs.mariadb.client)
 
     compileOnly(libs.adventure.text.minimessage)

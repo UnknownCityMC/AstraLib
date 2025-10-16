@@ -8,7 +8,11 @@ public class ModernRedisSetting {
     @JsonProperty
     private int port = 11;
     @JsonProperty
+    private String username = "gandalf";
+    @JsonProperty
     private String password = "dwarf_secret";
+    @JsonProperty
+    private boolean ssl = true;
 
     public ModernRedisSetting() {
 
@@ -24,5 +28,13 @@ public class ModernRedisSetting {
 
     public String password() {
         return password;
+    }
+
+    public String username() {
+        return username;
+    }
+
+    public boolean ssl() {
+        return ssl;
     }
 }

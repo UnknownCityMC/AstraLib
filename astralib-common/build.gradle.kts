@@ -1,25 +1,26 @@
 plugins {
     `maven-publish`
     id("java")
+    id("java-library")
 }
 
 val shadeBasePath = "${group}.${rootProject.name.lowercase()}."
 
 dependencies {
-    compileOnly(libs.cloud.core)
+    api(libs.cloud.core)
+    api(libs.gson)
 
     compileOnly(libs.configurate.yaml)
     compileOnly(libs.configurate.hocon)
 
-    compileOnly(libs.redis)
+    api(libs.sadu.mariadb)
+    api(libs.sadu.postgresql)
+    api(libs.sadu.sqlite)
+    api(libs.sadu.queries)
+    api(libs.sadu.datasource)
 
-    compileOnly(libs.sadu.mysql)
-    compileOnly(libs.sadu.mariadb)
-    compileOnly(libs.sadu.postgresql)
-    compileOnly(libs.sadu.sqlite)
-    compileOnly(libs.sadu.queries)
-    compileOnly(libs.sadu.datasource)
     compileOnly(libs.mariadb.client)
+    compileOnly(libs.lettuce)
 
     compileOnly(libs.jackson.yaml)
     compileOnly(libs.jackson.toml)

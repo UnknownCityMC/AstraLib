@@ -3,8 +3,12 @@ package de.unknowncity.astralib.paper.plugin;
 import de.unknowncity.astralib.common.database.StandardDataBaseProvider;
 import de.unknowncity.astralib.common.io.ResourceUtils;
 import de.unknowncity.astralib.common.message.lang.Localization;
+import de.unknowncity.astralib.common.platform.AstraLib;
+import de.unknowncity.astralib.common.redis.RedisService;
+import de.unknowncity.astralib.common.redis.RedisUriBuilder;
 import de.unknowncity.astralib.paper.api.lib.AstraLibPaper;
 import de.unknowncity.astralib.paper.api.message.PaperMessenger;
+import de.unknowncity.astralib.paper.platform.PaperAstraPlatform;
 import de.unknowncity.astralib.paper.plugin.configuration.AstraLibConfiguration;
 import de.unknowncity.astralib.paper.plugin.database.dao.language.MariaDBLanguageDao;
 import de.unknowncity.astralib.paper.plugin.database.service.LanguageService;
@@ -21,11 +25,7 @@ public class AstraLibPaperPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        var configOpt = AstraLibConfiguration.loadFromFile(AstraLibConfiguration.class);
-
-        this.configuration = configOpt.orElseGet(AstraLibConfiguration::new);
-        this.configuration.save();
-
+        initializeConfiguration();
         initializeDataServices();
 
         this.messenger = initMesseneger();
@@ -35,6 +35,27 @@ public class AstraLibPaperPlugin extends JavaPlugin {
             languageService,
             messenger
         ), this, ServicePriority.High);
+        var redisService = new RedisService(RedisUriBuilder.build(configuration.redis()));
+        var platform = new PaperAstraPlatform(this);
+
+        AstraLib.initialize(
+                platform,
+                redisService
+        );
+
+
+    }
+
+    @Override
+    public void onDisable() {
+        AstraLib.getRedis().shutdown();
+    }
+
+    private void initializeConfiguration() {
+        var configOpt = AstraLibConfiguration.loadFromFile(AstraLibConfiguration.class, getDataPath());
+
+        this.configuration = configOpt.orElseGet(AstraLibConfiguration::new);
+        this.configuration.save();
     }
 
     public PaperMessenger initMesseneger() {
@@ -45,14 +66,14 @@ public class AstraLibPaperPlugin extends JavaPlugin {
                 .withLogger(getLogger())
                 .buildAndLoad();
         return PaperMessenger.builder(localization, getPluginMeta())
-                .withDefaultLanguage(configuration.languageSetting().defaultLanguage())
+                .withDefaultLanguage(configuration.language().defaultLanguage())
                 .withLanguageService(languageService)
                 .build();
     }
 
     private void initializeDataServices() {
 
-        var databaseSettings = configuration.dataBaseSetting();
+        var databaseSettings = configuration.database();
 
         var queryConfig = StandardDataBaseProvider.updateAndConnectToDataBase(databaseSettings, getClassLoader(), getDataPath());
 

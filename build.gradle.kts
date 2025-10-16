@@ -18,20 +18,11 @@ dependencies {
     api(libs.jackson.yaml)
     api(libs.jackson.toml)
 
-    api(libs.redis)
-
     api(libs.cloud.core)
     api(libs.cloud.paper)
     api(libs.cloud.extras)
     api(libs.cloud.confirm)
 
-    api(libs.sadu.mysql)
-    api(libs.sadu.mariadb)
-    api(libs.sadu.postgresql)
-    api(libs.sadu.sqlite)
-    api(libs.sadu.queries)
-    api(libs.sadu.datasource)
-    
     testImplementation(platform("org.junit:junit-bom:5.13.2"))
     testImplementation("org.junit.jupiter", "junit-jupiter", "5.10.3")
 }

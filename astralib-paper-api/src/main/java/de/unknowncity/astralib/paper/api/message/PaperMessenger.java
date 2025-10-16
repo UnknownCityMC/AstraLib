@@ -171,7 +171,7 @@ public class PaperMessenger implements Messenger<Player> {
             logger.severe(e.getMessage());
         }
         return list;
-    }
+    }<
 
     @Override
     public Component componentFromList(Language language, NodePath path, Player player, TagResolver... resolvers) {

@@ -21,7 +21,6 @@ import org.incendo.cloud.caption.CaptionRegistry;
 import org.incendo.cloud.caption.StandardCaptionKeys;
 import org.incendo.cloud.execution.ExecutionCoordinator;
 import org.incendo.cloud.paper.LegacyPaperCommandManager;
-import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.configurate.NodePath;
 
@@ -97,7 +96,7 @@ public class PaperAstraPlugin extends JavaPlugin implements AstraPlugin {
 
     // Method to initialize command manager using captions of the lib messenger
 
-    @ApiStatus.Internal
+    
     public void initializeCommandManager(PaperMessenger messenger) {
         try {
             this.commandManager = LegacyPaperCommandManager.createNative(
@@ -159,7 +158,7 @@ public class PaperAstraPlugin extends JavaPlugin implements AstraPlugin {
         );
     }
 
-    @ApiStatus.Internal
+    
     private void registerDefaultHooks() {
         hookRegistry.register(new PlaceholderApiHook(this));
     }
