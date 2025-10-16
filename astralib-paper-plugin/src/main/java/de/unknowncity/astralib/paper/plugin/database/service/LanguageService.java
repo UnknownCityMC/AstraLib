@@ -24,7 +24,7 @@ public class LanguageService implements AstraLanguageService<Player> {
 
     @Override
     public Language getDefaultLanguage() {
-        return configuration.languageSetting().defaultLanguage();
+        return configuration.language().defaultLanguage();
     }
 
     public Language getPlayerLanguage(Player player) {
@@ -58,7 +58,7 @@ public class LanguageService implements AstraLanguageService<Player> {
             if (language.isPresent()) {
                 languageCache.put(uuid, language.get());
             } else {
-                var defaultLanguage = configuration.languageSetting().defaultLanguage();
+                var defaultLanguage = configuration.language().defaultLanguage();
                 languageDao.write(uuid, defaultLanguage);
                 languageCache.put(uuid, defaultLanguage);
             }
