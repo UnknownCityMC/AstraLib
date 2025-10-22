@@ -4,8 +4,6 @@ import de.unknowncity.astralib.common.database.StandardDataBaseProvider;
 import de.unknowncity.astralib.common.io.ResourceUtils;
 import de.unknowncity.astralib.common.message.lang.Localization;
 import de.unknowncity.astralib.common.platform.AstraLib;
-import de.unknowncity.astralib.common.redis.RedisService;
-import de.unknowncity.astralib.common.redis.RedisUriBuilder;
 import de.unknowncity.astralib.paper.api.lib.AstraLibPaper;
 import de.unknowncity.astralib.paper.api.message.PaperMessenger;
 import de.unknowncity.astralib.paper.platform.PaperAstraPlatform;
@@ -48,7 +46,7 @@ public class AstraLibPaperPlugin extends JavaPlugin {
     }
 
     private void initializeConfiguration() {
-        var configOpt = AstraLibConfiguration.loadFromFile(AstraLibConfiguration.class, getDataPath());
+        var configOpt = AstraLibConfiguration.loadFromFile(AstraLibConfiguration.class);
 
         this.configuration = configOpt.orElseGet(AstraLibConfiguration::new);
         this.configuration.save();
