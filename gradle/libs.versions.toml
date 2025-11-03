@@ -12,7 +12,7 @@ paper-api = "1.21.7-R0.1-SNAPSHOT"
 configurate = "4.2.0"
 jackson = "2.19.1"
 adventure = "4.23.0"
-papi = "2.11.6"
+papi = "2.11.7"
 
 # Commands
 cloud-core = "2.0.0-rc.2"
