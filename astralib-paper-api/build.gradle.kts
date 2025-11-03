@@ -30,7 +30,7 @@ dependencies {
     compileOnly(libs.papi)
     compileOnly(libs.paper.api)
 
-    testImplementation(platform("org.junit:junit-bom:5.13.2"))
+    testImplementation(platform("org.junit:junit-bom:6.0.1"))
     testImplementation("org.junit.jupiter:junit-jupiter")
     testImplementation(libs.paper.api)
 }
