@@ -25,7 +25,7 @@ cloud-confirm = "1.0.0-rc.1"
 redis = "6.0.0"
 sadu = "2.3.2"
 mariadb = "3.5.2"
-lettuce = "7.0.0.BETA2"
+lettuce = "7.4.0.BETA1"
 gson = "2.13.2"
 
 # Testing
