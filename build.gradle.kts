@@ -23,7 +23,7 @@ dependencies {
     api(libs.cloud.extras)
     api(libs.cloud.confirm)
 
-    testImplementation(platform("org.junit:junit-bom:5.13.2"))
+    testImplementation(platform("org.junit:junit-bom:6.0.1"))
     testImplementation("org.junit.jupiter", "junit-jupiter", "5.10.3")
 }
 
