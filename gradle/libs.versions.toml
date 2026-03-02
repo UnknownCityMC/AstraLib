@@ -23,7 +23,7 @@ cloud-confirm = "1.0.0-rc.1"
 
 # Storage
 redis = "7.2.0"
-sadu = "2.3.5"
+sadu = "2.3.7"
 mariadb = "3.5.7"
 lettuce = "7.2.1.RELEASE"
 gson = "2.13.2"
