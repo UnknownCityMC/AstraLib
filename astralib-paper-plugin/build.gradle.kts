@@ -23,12 +23,12 @@ dependencies {
     bukkitLibrary(libs.configurate.yaml)
     bukkitLibrary(libs.configurate.hocon)
 
-    bukkitLibrary(libs.redis)
+    bukkitLibrary(libs.lettuce)
+    bukkitLibrary(libs.gson)
 
     implementation(libs.jackson.yaml)
     implementation(libs.jackson.toml)
 
-    bukkitLibrary(libs.sadu.mysql)
     bukkitLibrary(libs.sadu.mariadb)
     bukkitLibrary(libs.sadu.postgresql)
     bukkitLibrary(libs.sadu.sqlite)
@@ -71,10 +71,12 @@ tasks {
 
         fun relocateDependency(from : String) = relocate(from, "$shadeBasePath$from")
         relocateDependency("com.fasterxml")
+        mergeServiceFiles()
+        exclude("META-INF/LICENSE*", "META-INF/NOTICE*")
     }
 
     runServer {
-        minecraftVersion("1.21.5")
+        minecraftVersion("1.21.10")
         jvmArgs("-Dcom.mojang.eula.agree=true")
     }
 }

@@ -3,7 +3,6 @@ package de.unknowncity.astralib.common.database;
 import com.zaxxer.hikari.HikariDataSource;
 import de.chojo.sadu.datasource.DataSourceCreator;
 import de.chojo.sadu.mariadb.databases.MariaDb;
-import de.chojo.sadu.mysql.databases.MySql;
 import de.chojo.sadu.postgresql.databases.PostgreSql;
 import de.chojo.sadu.queries.api.configuration.QueryConfiguration;
 import de.chojo.sadu.sqlite.databases.SqLite;
@@ -43,11 +42,6 @@ public class StandardDataBaseProvider {
                     .withClassLoader(classLoader)
                     .execute();
 
-            case MYSQL -> SqlUpdater.builder(dataSource, MySql.get())
-                    .setVersionTable("version")
-                    .withClassLoader(classLoader)
-                    .execute();
-
             case POSTGRESQL -> SqlUpdater.builder(dataSource, PostgreSql.get())
                     .setVersionTable("version")
                     .withClassLoader(classLoader)
@@ -77,21 +71,7 @@ public class StandardDataBaseProvider {
                         .withMinimumIdle(dataBaseSetting.minIdleConnections())
                         .build();
             }
-            case MYSQL -> {
-                return DataSourceCreator.create(MySql.get())
-                        .configure(config -> config
-                                .port(dataBaseSetting.port())
-                                .user(dataBaseSetting.username())
-                                .password(dataBaseSetting.password())
-                                .database(dataBaseSetting.database())
-                                .host(dataBaseSetting.host())
-                                .driverClass(Driver.class)
-                        )
-                        .create()
-                        .withMaximumPoolSize(dataBaseSetting.maxPoolSize())
-                        .withMinimumIdle(dataBaseSetting.minIdleConnections())
-                        .build();
-            }
+
             case POSTGRESQL -> {
                 return DataSourceCreator.create(PostgreSql.get())
                         .configure(config -> config

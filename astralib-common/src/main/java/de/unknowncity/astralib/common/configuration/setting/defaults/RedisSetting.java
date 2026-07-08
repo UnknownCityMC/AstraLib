@@ -2,19 +2,19 @@ package de.unknowncity.astralib.common.configuration.setting.defaults;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class ModernRedisSetting {
+public final class RedisSetting {
     @JsonProperty
-    private String host = "localhost";
+    private final String host = "localhost";
     @JsonProperty
-    private int port = 11;
+    private final int port = 6379;
     @JsonProperty
-    private String username = "gandalf";
+    private final String username = null;
     @JsonProperty
-    private String password = "dwarf_secret";
+    private final String password = null;
     @JsonProperty
-    private boolean ssl = true;
+    private final boolean ssl = true;
 
-    public ModernRedisSetting() {
+    public RedisSetting() {
 
     }
 
@@ -26,12 +26,12 @@ public class ModernRedisSetting {
         return port;
     }
 
-    public String password() {
-        return password;
-    }
-
     public String username() {
         return username;
+    }
+
+    public String password() {
+        return password;
     }
 
     public boolean ssl() {

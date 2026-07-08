@@ -1,29 +1,32 @@
 [versions]
 
 # Gradle Plugins
-shadow = "8.3.7"
-pluginyml = "0.7.1"
-run = "2.3.1"
+shadow = "9.3.0"
+pluginyml = "0.8.0"
+run = "3.0.2"
 
 # Paper
-paper-api = "1.21.7-R0.1-SNAPSHOT"
+paper-api = "1.21.11-R0.1-SNAPSHOT"
+velocity = "3.4.0-SNAPSHOT"
 
 # Config
 configurate = "4.2.0"
-jackson = "2.19.1"
-adventure = "4.23.0"
-papi = "2.11.6"
+jackson = "2.20.1"
+adventure = "4.26.1"
+papi = "2.11.7"
 
 # Commands
-cloud-core = "2.0.0-rc.2"
-cloud-paper = "2.0.0-beta.10"
-cloud-minecraft-extras = "2.0.0-beta.10"
+cloud-core = "2.0.0"
+cloud-paper = "2.0.0-beta.14"
+cloud-minecraft-extras = "2.0.0-beta.14"
 cloud-confirm = "1.0.0-rc.1"
 
 # Storage
-redis = "6.0.0"
-sadu = "2.3.2"
-mariadb = "3.5.2"
+redis = "7.2.0"
+sadu = "2.3.5"
+mariadb = "3.5.7"
+lettuce = "7.2.1.RELEASE"
+gson = "2.13.2"
 
 # Testing
 junit = "2.11.5"
@@ -32,12 +35,14 @@ junit = "2.11.5"
 
 # Paper
 paper-api = { group = "io.papermc.paper", name = "paper-api", version.ref = "paper-api" }
+velocity = { group = "com.velocitypowered", name = "velocity-api", version.ref = "velocity" }
 
 # Config
 configurate-yaml = { group = "org.spongepowered", name = "configurate-yaml", version.ref = "configurate" }
 configurate-hocon = { group = "org.spongepowered", name = "configurate-hocon", version.ref = "configurate" }
-jackson-yaml = { group = "com.fasterxml.jackson.dataformat", name =  "jackson-dataformat-yaml", version.ref = "jackson"}
-jackson-toml = { group = "com.fasterxml.jackson.dataformat", name =  "jackson-dataformat-toml", version.ref = "jackson"}
+jackson-yaml = { group = "com.fasterxml.jackson.dataformat", name = "jackson-dataformat-yaml", version.ref = "jackson" }
+jackson-toml = { group = "com.fasterxml.jackson.dataformat", name = "jackson-dataformat-toml", version.ref = "jackson" }
+gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
 
 adventure-api = { group = "net.kyori", name = "adventure-api", version.ref = "adventure" }
 adventure-text-minimessage = { group = "net.kyori", name = "adventure-text-minimessage", version.ref = "adventure" }
@@ -50,10 +55,9 @@ cloud-confirm = { group = "org.incendo", name = "cloud-processors-confirmation",
 cloud-extras = { group = "org.incendo", name = "cloud-minecraft-extras", version.ref = "cloud-minecraft-extras" }
 
 # Storage
-redis = { group = "redis.clients", name = "jedis", version.ref = "redis" }
+lettuce = { group = "io.lettuce", name = "lettuce-core", version.ref = "lettuce" }
 sadu-queries = { group = "de.chojo.sadu", name = "sadu-queries", version.ref = "sadu" }
 sadu-datasource = { group = "de.chojo.sadu", name = "sadu-datasource", version.ref = "sadu" }
-sadu-mysql = { group = "de.chojo.sadu", name = "sadu-mysql", version.ref = "sadu" }
 sadu-mariadb = { group = "de.chojo.sadu", name = "sadu-mariadb", version.ref = "sadu" }
 sadu-postgresql = { group = "de.chojo.sadu", name = "sadu-postgresql", version.ref = "sadu" }
 sadu-sqlite = { group = "de.chojo.sadu", name = "sadu-sqlite", version.ref = "sadu" }
@@ -64,6 +68,6 @@ mariadb-client = { group = "org.mariadb.jdbc", name = "mariadb-java-client", ver
 
 [plugins]
 shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }
-pluginyml = { id = "de.eldoria.plugin-yml.bukkit", version.ref = "pluginyml"}
+pluginyml = { id = "de.eldoria.plugin-yml.bukkit", version.ref = "pluginyml" }
 run-paper = { id = "xyz.jpenilla.run-paper", version.ref = "run" }
 

@@ -19,6 +19,36 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public abstract class YamlAstraConfiguration {
+    private Path pluginDataPath;
+
+    public void pluginDataPath(Path pluginDataPath) {
+        this.pluginDataPath = pluginDataPath;
+    }
+
+    public static <T extends YamlAstraConfiguration> Optional<T> loadFromFile(Class<T> configurationClass, Path pluginDataPath) {
+        var configPath = pluginDataPath.resolve(Path.of(configurationClass.getDeclaredAnnotation(Config.class).targetFile()));
+        Logger.getLogger("Configuration").log(Level.INFO, "Loading Configuration from " + configPath);
+
+        if (!Files.exists(configPath)) {
+            return Optional.empty();
+        }
+
+        var objectMapper = new YAMLMapper();
+        objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+        objectMapper.findAndRegisterModules();
+
+        try {
+            if (Files.readAllBytes(configPath).length == 0) {
+                return Optional.empty();
+            }
+            var config = objectMapper.readValue(configPath.toFile(), configurationClass);
+            config.pluginDataPath(pluginDataPath);
+            return Optional.of(config);
+        } catch (IOException e) {
+            Logger.getLogger("Configuration").log(Level.SEVERE, "Error while reading configuration file", e);
+            return Optional.empty();
+        }
+    }
 
     public static <T extends YamlAstraConfiguration> Optional<T> loadFromFile(Class<T> configurationClass) {
         var configPath = Path.of(configurationClass.getDeclaredAnnotation(Config.class).targetFile());
@@ -43,8 +73,9 @@ public abstract class YamlAstraConfiguration {
         }
     }
 
+
     public void save() {
-        var configPath = targetFile();
+        var configPath = pluginDataPath == null ? targetFile() : pluginDataPath.resolve(targetFile());
         Logger.getLogger("Configuration").log(Level.INFO, "Saving configuration to " + configPath);
 
         if (!Files.exists(configPath)) {

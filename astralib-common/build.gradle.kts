@@ -11,9 +11,9 @@ dependencies {
     compileOnly(libs.configurate.yaml)
     compileOnly(libs.configurate.hocon)
 
-    compileOnly(libs.redis)
+    compileOnly(libs.lettuce)
+    compileOnly(libs.gson)
 
-    compileOnly(libs.sadu.mysql)
     compileOnly(libs.sadu.mariadb)
     compileOnly(libs.sadu.postgresql)
     compileOnly(libs.sadu.sqlite)
@@ -27,7 +27,7 @@ dependencies {
     compileOnly(libs.adventure.text.minimessage)
     compileOnly(libs.adventure.api)
 
-    testImplementation(platform("org.junit:junit-bom:5.13.2"))
+    testImplementation(platform("org.junit:junit-bom:6.0.1"))
     testImplementation("org.junit.jupiter:junit-jupiter")
 
     testCompileOnly(libs.jackson.yaml)
