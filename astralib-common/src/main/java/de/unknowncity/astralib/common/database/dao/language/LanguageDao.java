@@ -1,4 +1,4 @@
-package de.unknowncity.astralib.paper.plugin.database.dao.language;
+package de.unknowncity.astralib.common.database.dao.language;
 
 import de.unknowncity.astralib.common.message.lang.Language;
 

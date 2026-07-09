@@ -17,26 +17,17 @@ public class InventoryUtil {
     }
 
     public static void removeSpecificItemCount(Player player, ItemStack itemStack, int amount) {
-        var countToRemove = amount;
-        var left = amount;
+        var leftToRemove = amount;
         for (ItemStack content : player.getInventory().getStorageContents()) {
-            if (countToRemove == 0) {
+            if (leftToRemove <= 0) {
                 return;
             }
-            left = countToRemove;
-            if (content != null && content.isSimilar(itemStack)) {
-                for (int i = left; i > 0; i--) {
-                    if (countToRemove == 0) {
-                        return;
-                    }
-                    countToRemove--;
-                    if (content.getAmount() == 1) {
-                        player.getInventory().remove(content);
-                        break;
-                    }
-                    content.setAmount(content.getAmount() - 1);
-                }
+            if (content == null || !content.isSimilar(itemStack)) {
+                continue;
             }
+            var removed = Math.min(content.getAmount(), leftToRemove);
+            content.setAmount(content.getAmount() - removed);
+            leftToRemove -= removed;
         }
     }
 
@@ -49,10 +40,11 @@ public class InventoryUtil {
         var totalSpaceForItemType = (Arrays.stream(storageContent).filter(Objects::isNull).count()
                 * itemStack.getMaxStackSize())
                 + Arrays.stream(storageContent)
+                .filter(Objects::nonNull)
                 .filter(currentItem -> currentItem.isSimilar(itemStack))
                 .mapToInt(currentItem -> currentItem.getMaxStackSize() - currentItem.getAmount())
                 .sum();
-        return totalSpaceForItemType > amount;
+        return totalSpaceForItemType >= amount;
     }
 
     public static int getFreeSpace(Player player, ItemStack itemStack) {

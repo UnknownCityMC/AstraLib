@@ -23,6 +23,6 @@ public class HookRegistry<I, H extends PluginHook<I>> extends Registry<I, H> {
      * @return is the hook is ready to be used
      */
     public boolean isAvailable(Class<? extends H> hook) {
-        return getRegistered(hook).isAvailable();
+        return getRegistered(hook).map(PluginHook::isAvailable).orElse(false);
     }
 }

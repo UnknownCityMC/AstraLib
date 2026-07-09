@@ -18,5 +18,6 @@ public class PlayerJoinListener implements Listener {
         var uuid = player.getUniqueId();
 
         plugin.languageService().loadPlayerInCache(uuid);
+        plugin.playerNameService().cachePlayer(uuid, player.getName());
     }
 }

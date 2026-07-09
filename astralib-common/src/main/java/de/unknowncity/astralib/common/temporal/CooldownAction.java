@@ -7,7 +7,7 @@ import java.time.Duration;
  * in between executions
  */
 public class CooldownAction {
-    private long lastExecution = 0;
+    private volatile long lastExecution = 0;
     private final Duration cooldownDuration;
 
     public CooldownAction(Duration cooldownDuration) {

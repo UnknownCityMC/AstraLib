@@ -3,24 +3,25 @@ package de.unknowncity.astralib.common.timer;
 import de.unknowncity.astralib.common.timer.aborttrigger.AbortTrigger;
 
 import java.time.Duration;
-import java.util.*;
+import java.util.Set;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 public abstract class Timer {
     protected ScheduledExecutorService executorService;
-    protected boolean running;
-    protected boolean paused;
-    protected Optional<Runnable> runOnFinish;
-    protected Optional<Consumer<Duration>> runOnStep;
-    protected TimeUnit timeUnit;
-    protected Set<AbortTrigger> abortTriggers;
+    // Mutated from caller threads, read inside the scheduler thread
+    protected volatile boolean running;
+    protected volatile boolean paused;
+    protected final Runnable runOnFinish;
+    protected final Consumer<Duration> runOnStep;
+    protected final TimeUnit timeUnit;
+    protected final Set<AbortTrigger> abortTriggers;
 
     public Timer(
             TimeUnit timeUnit,
-            Optional<Runnable> runOnFinish,
-            Optional<Consumer<Duration>> runOnStep,
+            Runnable runOnFinish,
+            Consumer<Duration> runOnStep,
             Set<AbortTrigger> abortTriggers
     ) {
         this.timeUnit = timeUnit;

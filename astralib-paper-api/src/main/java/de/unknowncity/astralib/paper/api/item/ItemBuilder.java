@@ -52,13 +52,13 @@ public class ItemBuilder {
     }
 
     public ItemBuilder enchant(Enchantment enchantment, int level) {
-        this.item.addUnsafeEnchantment(enchantment, level);
+        // Via meta, enchants applied to the item directly get wiped by setItemMeta in item()
+        itemMeta.addEnchant(enchantment, level, true);
         return this;
     }
 
     public ItemBuilder enchant(Enchantment enchantment) {
-        this.item.addUnsafeEnchantment(enchantment, 1);
-        return this;
+        return enchant(enchantment, 1);
     }
 
     public ItemBuilder glow(boolean glow) {

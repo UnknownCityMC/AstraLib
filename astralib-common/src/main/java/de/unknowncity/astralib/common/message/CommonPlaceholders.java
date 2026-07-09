@@ -20,11 +20,11 @@ public class CommonPlaceholders {
      * @return the placeholders for the duration
      */
     public static TagResolver[] duration(Duration duration) {
-        var days = duration.toHours() == 0 ? "" : String.valueOf(duration.toDaysPart());
-        var hours = duration.toHours() == 0 ? "" : String.valueOf(duration.toHoursPart());
+        var days = duration.toDaysPart() == 0 ? "" : String.valueOf(duration.toDaysPart());
+        var hours = duration.toHoursPart() == 0 ? "" : String.valueOf(duration.toHoursPart());
         var minutes = duration.toMinutesPart() == 0 ? "" : String.valueOf(duration.toMinutesPart());
         var seconds = duration.toSecondsPart() == 0 ? "" : String.valueOf(duration.toSecondsPart());
-        var millis = duration.toSecondsPart() == 0 ? "" : String.valueOf(duration.toMillisPart());
+        var millis = duration.toMillisPart() == 0 ? "" : String.valueOf(duration.toMillisPart());
 
         return new TagResolver[]{
                 Placeholder.parsed("days", days),

@@ -1,10 +1,13 @@
 package de.unknowncity.astralib.paper.api.plugin;
 
 import de.unknowncity.astralib.common.command.CommandRegistry;
+import de.unknowncity.astralib.common.command.SimpleCloudCaptionRegistry;
 import de.unknowncity.astralib.common.hook.HookRegistry;
 import de.unknowncity.astralib.common.io.ResourceUtils;
 import de.unknowncity.astralib.common.plugin.AstraPlugin;
+import de.unknowncity.astralib.common.plugin.ReloadManager;
 import de.unknowncity.astralib.common.service.AstraLanguageService;
+import de.unknowncity.astralib.common.service.PlayerNameService;
 import de.unknowncity.astralib.common.service.ServiceRegistry;
 import de.unknowncity.astralib.paper.api.hook.PaperPluginHook;
 import de.unknowncity.astralib.paper.api.hook.defaulthooks.PlaceholderApiHook;
@@ -16,13 +19,10 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 import org.incendo.cloud.CommandManager;
-import org.incendo.cloud.caption.CaptionProvider;
 import org.incendo.cloud.caption.CaptionRegistry;
-import org.incendo.cloud.caption.StandardCaptionKeys;
 import org.incendo.cloud.execution.ExecutionCoordinator;
 import org.incendo.cloud.paper.LegacyPaperCommandManager;
 import org.jetbrains.annotations.NotNull;
-import org.spongepowered.configurate.NodePath;
 
 import java.nio.file.Path;
 import java.util.logging.Level;
@@ -36,6 +36,7 @@ public class PaperAstraPlugin extends JavaPlugin implements AstraPlugin {
     protected HookRegistry<PaperAstraPlugin, PaperPluginHook> hookRegistry;
 
     protected AstraLanguageService<Player> languageService;
+    protected PlayerNameService playerNameService;
     protected PaperMessenger libMessenger;
 
     @Override
@@ -54,12 +55,15 @@ public class PaperAstraPlugin extends JavaPlugin implements AstraPlugin {
         }
 
         this.languageService = astraLib.getProvider().astraLanguageService();
+        this.playerNameService = astraLib.getProvider().playerNameService();
         this.libMessenger = astraLib.getProvider().paperMessenger();
 
         initializeCommandManager(libMessenger);
 
         // Plugin exclusive logic starts here
         onPluginEnable();
+
+        ReloadManager.register(getName(), this::onPluginReload);
     }
 
     /**
@@ -67,7 +71,7 @@ public class PaperAstraPlugin extends JavaPlugin implements AstraPlugin {
      * Shortcut for registering listeners though calling the PluginManager
      * @param listeners one or multiple listeners to register
      */
-    public void regsterListeners(Listener... listeners) {
+    public void registerListeners(Listener... listeners) {
         for (Listener listener : listeners) {
             getServer().getPluginManager().registerEvents(listener, this);
         }
@@ -110,52 +114,10 @@ public class PaperAstraPlugin extends JavaPlugin implements AstraPlugin {
         }
 
         this.captionRegistry = commandManager.captionRegistry();
+        this.commandRegistry = new CommandRegistry<>(this, commandManager);
 
-        captionRegistry.registerProvider(
-                CaptionProvider.forCaption(StandardCaptionKeys.ARGUMENT_PARSE_FAILURE_CHAR,
-                        sender ->  messenger.getNullableString(sender instanceof Player player ? player : null,
-                                NodePath.path("exception", "argument-parse", "char")))
-        );
-        captionRegistry.registerProvider(
-                CaptionProvider.forCaption(StandardCaptionKeys.ARGUMENT_PARSE_FAILURE_COLOR,
-                        sender -> messenger.getNullableString(sender instanceof Player player ? player : null,
-                                NodePath.path("exception", "argument-parse", "color")))
-        );
-        captionRegistry.registerProvider(
-                CaptionProvider.forCaption(StandardCaptionKeys.ARGUMENT_PARSE_FAILURE_DURATION,
-                        sender -> messenger.getNullableString(sender instanceof Player player ? player : null,
-                                NodePath.path("exception", "argument-parse", "duration")))
-        );
-        captionRegistry.registerProvider(
-                CaptionProvider.forCaption(StandardCaptionKeys.ARGUMENT_PARSE_FAILURE_ENUM,
-                        sender -> messenger.getNullableString(sender instanceof Player player ? player : null,
-                                NodePath.path("exception", "argument-parse", "enum")))
-        );
-        captionRegistry.registerProvider(
-                CaptionProvider.forCaption(StandardCaptionKeys.ARGUMENT_PARSE_FAILURE_NUMBER,
-                        sender -> messenger.getNullableString(sender instanceof Player player ? player : null,
-                                NodePath.path("exception", "argument-parse", "number")))
-        );
-        captionRegistry.registerProvider(
-                CaptionProvider.forCaption(StandardCaptionKeys.ARGUMENT_PARSE_FAILURE_STRING,
-                        sender -> messenger.getNullableString(sender instanceof Player player ? player : null,
-                                NodePath.path("exception", "argument-parse", "string")))
-        );
-        captionRegistry.registerProvider(
-                CaptionProvider.forCaption(StandardCaptionKeys.ARGUMENT_PARSE_FAILURE_REGEX,
-                        sender -> messenger.getNullableString(sender instanceof Player player ? player : null,
-                                NodePath.path("exception", "argument-parse", "regex")))
-        );
-        captionRegistry.registerProvider(
-                CaptionProvider.forCaption(StandardCaptionKeys.ARGUMENT_PARSE_FAILURE_UUID,
-                        sender -> messenger.getNullableString(sender instanceof Player player ? player : null,
-                                NodePath.path("exception", "argument-parse", "uuid")))
-        );
-        captionRegistry.registerProvider(
-                CaptionProvider.forCaption(StandardCaptionKeys.ARGUMENT_PARSE_FAILURE_BOOLEAN,
-                        sender -> messenger.getNullableString(sender instanceof Player player ? player : null,
-                                NodePath.path("exception", "argument-parse", "boolean")))
-        );
+        SimpleCloudCaptionRegistry.registerDefaultCaptions(commandManager, messenger,
+                sender -> sender instanceof Player player ? player : null);
     }
 
     
@@ -174,6 +136,7 @@ public class PaperAstraPlugin extends JavaPlugin implements AstraPlugin {
 
     @Override
     public void onDisable() {
+        ReloadManager.unregister(getName());
         onPluginDisable();
     }
 
@@ -215,10 +178,27 @@ public class PaperAstraPlugin extends JavaPlugin implements AstraPlugin {
     }
 
     /**
+     * Called when the plugin gets reloaded via /astralib reload [plugin]
+     * Override to reload configurations, language files etc.
+     */
+    @Override
+    public void onPluginReload() {
+
+    }
+
+    /**
      * Get the plugins cloud command manager
      * @return the plugins command manager
      */
     public CommandManager<CommandSender> commandManager() {
         return commandManager;
+    }
+
+    /**
+     * Get the plugins command registry
+     * @return the plugins command registry
+     */
+    public CommandRegistry<CommandSender, PaperAstraPlugin> commandRegistry() {
+        return commandRegistry;
     }
 }

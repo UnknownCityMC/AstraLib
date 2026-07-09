@@ -15,10 +15,19 @@ import java.util.logging.Logger;
 public class Localization {
     private final Path languageFileFolder;
     private final Map<Language, ConfigurationNode> languageConfigurationNodes;
+    private Logger logger;
 
     public Localization(Path languageFileFolder) {
         this.languageConfigurationNodes = new HashMap<>();
         this.languageFileFolder = languageFileFolder;
+    }
+
+    /**
+     * Clears all loaded languages and reads the language files from disk again
+     */
+    public void reload() {
+        languageConfigurationNodes.clear();
+        loadLanguageFiles(logger);
     }
 
     public static Builder builder(Path languageFileFolder) {
@@ -40,6 +49,7 @@ public class Localization {
 
         public Localization buildAndLoad() {
             var localization = new Localization(languagePath);
+            localization.logger = logger;
             localization.loadLanguageFiles(logger);
             return localization;
         }
@@ -75,7 +85,7 @@ public class Localization {
             languageConfigurationNodes.put(language, configurationNode);
         } catch (ConfigurateException e) {
             if (logger != null) {
-                logger.log(Level.WARNING, "Faild to load language file: '" + fileName + "'", e);
+                logger.log(Level.WARNING, "Failed to load language file: '" + fileName + "'", e);
             }
         }
     }
