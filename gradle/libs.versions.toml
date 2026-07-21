@@ -13,7 +13,7 @@ velocity = "3.5.0-SNAPSHOT"
 configurate = "4.2.0"
 jackson = "2.22.0"
 adventure = "4.26.1"
-papi = "2.12.2"
+papi = "2.12.3"
 
 # Commands
 cloud-core = "2.0.0"
