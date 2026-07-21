@@ -14,6 +14,7 @@ import de.unknowncity.astralib.common.configuration.annotation.Config;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -46,6 +47,7 @@ public abstract class YamlAstraConfiguration {
             return Optional.of(config);
         } catch (IOException e) {
             Logger.getLogger("Configuration").log(Level.SEVERE, "Error while reading configuration file", e);
+            backupBrokenConfig(configPath);
             return Optional.empty();
         }
     }
@@ -69,7 +71,23 @@ public abstract class YamlAstraConfiguration {
             return Optional.of(objectMapper.readValue(configPath.toFile(), configurationClass));
         } catch (IOException e) {
             Logger.getLogger("Configuration").log(Level.SEVERE, "Error while reading configuration file", e);
+            backupBrokenConfig(configPath);
             return Optional.empty();
+        }
+    }
+
+    /**
+     * Copies an unreadable configuration file to a ".broken" sibling so that user edits
+     * are not lost when the configuration is rewritten with defaults afterwards
+     * @param configPath the path of the unreadable configuration file
+     */
+    private static void backupBrokenConfig(Path configPath) {
+        var backupPath = configPath.resolveSibling(configPath.getFileName() + ".broken");
+        try {
+            Files.copy(configPath, backupPath, StandardCopyOption.REPLACE_EXISTING);
+            Logger.getLogger("Configuration").log(Level.WARNING, "Backed up broken configuration to " + backupPath);
+        } catch (IOException e) {
+            Logger.getLogger("Configuration").log(Level.SEVERE, "Failed to back up broken configuration file", e);
         }
     }
 

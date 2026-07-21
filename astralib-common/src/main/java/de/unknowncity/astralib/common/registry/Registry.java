@@ -6,6 +6,7 @@ import de.unknowncity.astralib.common.registry.registrable.StartableRegistrable;
 
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 public abstract class Registry<I, T extends Registrable<I>> {
@@ -52,10 +53,8 @@ public abstract class Registry<I, T extends Registrable<I>> {
      * @param registrableClass the type of the registrable
      * @return the registrable if present, else empty
      */
-    public <R extends T> R getRegistered(Class<R> registrableClass) {
-        var possibleSetting = registered.stream().filter(registrableClass::isInstance).findFirst();
-
-        return (possibleSetting.map(registrableClass::cast).orElse(null));
+    public <R extends T> Optional<R> getRegistered(Class<R> registrableClass) {
+        return registered.stream().filter(registrableClass::isInstance).findFirst().map(registrableClass::cast);
     }
 
     /**

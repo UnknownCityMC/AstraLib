@@ -1,6 +1,6 @@
 plugins {
-    `maven-publish`
     id("java")
+    id("astralib-publishing")
 }
 
 val shadeBasePath = "${group}.${rootProject.name.lowercase()}."
@@ -27,8 +27,9 @@ dependencies {
     compileOnly(libs.adventure.text.minimessage)
     compileOnly(libs.adventure.api)
 
-    testImplementation(platform("org.junit:junit-bom:6.0.1"))
+    testImplementation(platform("org.junit:junit-bom:6.1.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
     testCompileOnly(libs.jackson.yaml)
 }
@@ -47,32 +48,5 @@ tasks {
 
     test {
         useJUnitPlatform()
-    }
-}
-
-publishing {
-    repositories {
-        maven {
-            name = "UnknownCity"
-            url = if(rootProject.version.toString().endsWith("-SNAPSHOT")) {
-                uri("https://repo.unknowncity.de/snapshots")
-            } else {
-                uri("https://repo.unknowncity.de/releases")
-            }
-
-            credentials {
-                username = System.getenv("MVN_REPO_USERNAME")
-                password = System.getenv("MVN_REPO_PASSWORD")
-            }
-        }
-    }
-
-    publications {
-        register<MavenPublication>("maven") {
-            from(components["java"])
-            group = rootProject.group
-            artifactId = project.name
-            version = rootProject.version.toString()
-        }
     }
 }

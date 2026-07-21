@@ -5,7 +5,6 @@ import de.unknowncity.astralib.common.timer.aborttrigger.AbortTrigger;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -15,26 +14,26 @@ public class Countdown extends Timer {
 
     public Countdown(
             TimeUnit timeUnit,
-            Optional<Runnable> runOnFinish,
-            Optional<Consumer<Duration>> runOnStep,
+            Runnable runOnFinish,
+            Consumer<Duration> runOnStep,
             Set<AbortTrigger> abortTriggers
     ) {
         super(timeUnit, runOnFinish, runOnStep, abortTriggers);
     }
 
     public static class Builder {
-        protected Optional<Runnable> runOnFinish = Optional.empty();
-        protected Optional<Consumer<Duration>> runOnStep = Optional.empty();
+        protected Runnable runOnFinish;
+        protected Consumer<Duration> runOnStep;
         protected TimeUnit timeUnit = TimeUnit.SECONDS;
         protected Set<AbortTrigger> abortTriggers = new HashSet<>();
 
         public Builder withRunOnFinish(Runnable runOnFinish) {
-            this.runOnFinish = Optional.of(runOnFinish);
+            this.runOnFinish = runOnFinish;
             return this;
         }
 
         public Builder withRunOnStep(Consumer<Duration> runOnStep) {
-            this.runOnStep = Optional.of(runOnStep);
+            this.runOnStep = runOnStep;
             return this;
         }
 
@@ -57,10 +56,6 @@ public class Countdown extends Timer {
         return new Countdown.Builder();
     }
 
-    public void start(int timeSpan) {
-        start(Long.valueOf(timeSpan));
-    }
-
     public void start(long timeSpan) {
         this.executorService = Executors.newSingleThreadScheduledExecutor();
         running = true;
@@ -75,23 +70,25 @@ public class Countdown extends Timer {
 
         for (AbortTrigger abortTrigger : abortTriggers) {
             if (abortTrigger.checkForPotentialTrigger()) {
+                abortTrigger.runOnAbort().run();
                 executorService.shutdown();
                 return;
             }
         }
 
+        if (runOnStep != null) {
+            runOnStep.accept(Duration.of(timeSpan, timeUnit.toChronoUnit()));
+        }
+
         if (timeSpan <= 0) {
-            runOnFinish.ifPresent(Runnable::run);
-            executorService.schedule(() -> {
-                runOnStep.ifPresent(consumer -> consumer.accept(Duration.of(timeSpan, timeUnit.toChronoUnit())));
-            }, 50, TimeUnit.MILLISECONDS);
+            if (runOnFinish != null) {
+                runOnFinish.run();
+            }
+            running = false;
             executorService.shutdown();
             return;
         }
 
-        runOnStep.ifPresent(consumer -> consumer.accept(Duration.of(timeSpan, timeUnit.toChronoUnit())));
-        executorService.schedule(() -> {
-            step(paused ? timeSpan : timeSpan - 1);
-        }, 1, timeUnit);
+        executorService.schedule(() -> step(paused ? timeSpan : timeSpan - 1), 1, timeUnit);
     }
 }

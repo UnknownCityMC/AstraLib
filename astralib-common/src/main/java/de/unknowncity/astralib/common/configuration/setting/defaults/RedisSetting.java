@@ -12,7 +12,7 @@ public final class RedisSetting {
     @JsonProperty
     private final String password = null;
     @JsonProperty
-    private final boolean ssl = true;
+    private final boolean ssl = false;
 
     public RedisSetting() {
 

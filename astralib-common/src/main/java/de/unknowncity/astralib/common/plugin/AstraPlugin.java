@@ -8,6 +8,12 @@ public interface AstraPlugin {
 
     void onPluginDisable();
 
+    /**
+     * Called when the plugin gets reloaded via /astralib reload [plugin]
+     * Override to reload configurations, language files etc.
+     */
+    void onPluginReload();
+
     void disableSelf();
 
     void saveDefaultResource(String from, Path to);

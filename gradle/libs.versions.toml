@@ -1,35 +1,32 @@
 [versions]
 
 # Gradle Plugins
-shadow = "9.3.0"
-pluginyml = "0.8.0"
+shadow = "9.4.2"
+pluginyml = "0.9.0"
 run = "3.0.2"
 
 # Paper
-paper-api = "1.21.11-R0.1-SNAPSHOT"
-velocity = "3.4.0-SNAPSHOT"
+paper-api = "26.1.2.build.69-stable"
+velocity = "3.5.0-SNAPSHOT"
 
 # Config
 configurate = "4.2.0"
-jackson = "2.20.1"
+jackson = "2.22.0"
 adventure = "4.26.1"
-papi = "2.11.7"
+papi = "2.12.2"
 
 # Commands
 cloud-core = "2.0.0"
-cloud-paper = "2.0.0-beta.14"
-cloud-minecraft-extras = "2.0.0-beta.14"
+cloud-paper = "2.0.0-beta.15"
+cloud-velocity = "2.0.0-beta.15"
+cloud-minecraft-extras = "2.0.0-beta.15"
 cloud-confirm = "1.0.0-rc.1"
 
 # Storage
-redis = "7.2.0"
-sadu = "2.3.5"
-mariadb = "3.5.7"
-lettuce = "7.2.1.RELEASE"
-gson = "2.13.2"
-
-# Testing
-junit = "2.11.5"
+sadu = "2.3.9"
+mariadb = "3.5.8"
+lettuce = "7.6.0.RELEASE"
+gson = "2.14.0"
 
 [libraries]
 
@@ -51,6 +48,7 @@ papi = { group = "me.clip", name = "placeholderapi", version.ref = "papi" }
 # Commands
 cloud-core = { group = "org.incendo", name = "cloud-core", version.ref = "cloud-core" }
 cloud-paper = { group = "org.incendo", name = "cloud-paper", version.ref = "cloud-paper" }
+cloud-velocity = { group = "org.incendo", name = "cloud-velocity", version.ref = "cloud-velocity" }
 cloud-confirm = { group = "org.incendo", name = "cloud-processors-confirmation", version.ref = "cloud-confirm" }
 cloud-extras = { group = "org.incendo", name = "cloud-minecraft-extras", version.ref = "cloud-minecraft-extras" }
 
@@ -63,11 +61,9 @@ sadu-postgresql = { group = "de.chojo.sadu", name = "sadu-postgresql", version.r
 sadu-sqlite = { group = "de.chojo.sadu", name = "sadu-sqlite", version.ref = "sadu" }
 mariadb-client = { group = "org.mariadb.jdbc", name = "mariadb-java-client", version.ref = "mariadb" }
 
-# Testing
-# junit = { group = "", name = "", version.ref = "junit" }
-
 [plugins]
 shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }
 pluginyml = { id = "de.eldoria.plugin-yml.bukkit", version.ref = "pluginyml" }
 run-paper = { id = "xyz.jpenilla.run-paper", version.ref = "run" }
+run-velocity = { id = "xyz.jpenilla.run-velocity", version.ref = "run" }
 

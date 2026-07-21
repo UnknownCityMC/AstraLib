@@ -34,15 +34,6 @@ public class DurationFormatter {
      * @return a string with formatted duration
      */
     public static String formatDuration(Duration duration) {
-        String formattedString = String.format(
-                "%dd %dh %dm %ds",
-                duration.toDaysPart(),
-                duration.toHoursPart(),
-                duration.toMinutesPart(),
-                duration.toSecondsPart()
-        );
-
-        formattedString = formattedString.replaceAll("\\b0+[dhms]\\b", "").replaceAll("\\s+", " ").trim();
-        return formattedString;
+        return formatDuration("%dd %dh %dm %ds", duration);
     }
 }

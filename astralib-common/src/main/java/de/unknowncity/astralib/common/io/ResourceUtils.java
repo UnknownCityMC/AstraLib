@@ -21,7 +21,8 @@ public class ResourceUtils {
                 );
                 return;
             }
-            Files.createDirectories(dataPath.resolve(to.getParent()));
+            var parent = to.getParent();
+            Files.createDirectories(parent != null ? dataPath.resolve(parent) : dataPath);
             try (var outputStream = Files.newOutputStream(dataPath.resolve(to))) {
                 resourceAsStream.transferTo(outputStream);
             }
