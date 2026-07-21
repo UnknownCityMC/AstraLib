@@ -11,7 +11,6 @@ public final class RedisSetting {
     private final String username = null;
     @JsonProperty
     private final String password = null;
-    // Local redis instances rarely speak TLS, so plain redis:// is the sane default
     @JsonProperty
     private final boolean ssl = false;
 

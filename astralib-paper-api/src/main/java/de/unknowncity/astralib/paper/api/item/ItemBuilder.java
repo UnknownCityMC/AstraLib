@@ -52,7 +52,6 @@ public class ItemBuilder {
     }
 
     public ItemBuilder enchant(Enchantment enchantment, int level) {
-        // Via meta, enchants applied to the item directly get wiped by setItemMeta in item()
         itemMeta.addEnchant(enchantment, level, true);
         return this;
     }
