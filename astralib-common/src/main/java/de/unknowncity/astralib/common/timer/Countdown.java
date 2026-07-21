@@ -70,6 +70,7 @@ public class Countdown extends Timer {
 
         for (AbortTrigger abortTrigger : abortTriggers) {
             if (abortTrigger.checkForPotentialTrigger()) {
+                abortTrigger.runOnAbort().run();
                 executorService.shutdown();
                 return;
             }
