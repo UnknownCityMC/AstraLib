@@ -12,7 +12,7 @@ velocity = "3.5.0-SNAPSHOT"
 # Config
 configurate = "4.2.0"
 jackson = "2.22.0"
-adventure = "4.26.1"
+adventure = "5.2.0"
 papi = "2.12.2"
 
 # Commands
