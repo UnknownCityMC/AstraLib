@@ -4,11 +4,10 @@ plugins {
     id("java")
     alias(libs.plugins.pluginyml)
     alias(libs.plugins.run.paper)
-    alias(libs.plugins.shadow)
+    id("com.gradleup.shadow")
 }
 
 val mainClass = "${rootProject.group}.paper.plugin.AstraLibPaperPlugin"
-val shadeBasePath = "${rootProject.group}.libs."
 
 dependencies {
     implementation(project(":astralib-common"))
@@ -16,28 +15,19 @@ dependencies {
         exclude(group = "*", module = "*")
     }
 
-    bukkitLibrary(libs.cloud.paper)
-    bukkitLibrary(libs.cloud.extras)
-    bukkitLibrary(libs.cloud.confirm)
+    bukkitLibrary(libs.bundles.cloud.paper)
 
-    bukkitLibrary(libs.configurate.yaml)
-    bukkitLibrary(libs.configurate.hocon)
+    bukkitLibrary(libs.bundles.configurate)
 
     bukkitLibrary(libs.lettuce)
     bukkitLibrary(libs.gson)
 
-    implementation(libs.jackson.yaml)
-    implementation(libs.jackson.toml)
+    implementation(libs.bundles.jackson)
 
-    bukkitLibrary(libs.sadu.mariadb)
-    bukkitLibrary(libs.sadu.postgresql)
-    bukkitLibrary(libs.sadu.sqlite)
-    bukkitLibrary(libs.sadu.queries)
-    bukkitLibrary(libs.sadu.datasource)
-    bukkitLibrary(libs.mariadb.client)
+    bukkitLibrary(libs.bundles.sadu)
 
-    compileOnly(libs.adventure.text.minimessage)
-    compileOnly(libs.adventure.api)
+    compileOnly(libs.bundles.adventure)
+
     compileOnly(libs.papi)
     compileOnly(libs.paper.api)
 }
@@ -64,15 +54,16 @@ bukkit {
 }
 
 tasks {
+    jar {
+        enabled = false;
+    }
+
     shadowJar {
+        dependsOn(":astralib-paper-api:build")
         archiveVersion.set(rootProject.version.toString())
         archiveBaseName.set("AstraLib-Paper")
-        archiveClassifier.set("")
 
-        fun relocateDependency(from : String) = relocate(from, "$shadeBasePath$from")
         relocateDependency("com.fasterxml")
-        mergeServiceFiles()
-        exclude("META-INF/LICENSE*", "META-INF/NOTICE*")
     }
 
     runServer {

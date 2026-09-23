@@ -1,6 +1,7 @@
 [versions]
 
 # Gradle Plugins
+blossom = "2.2.0"
 shadow = "9.4.2"
 pluginyml = "0.9.0"
 run = "3.0.2"
@@ -61,7 +62,44 @@ sadu-postgresql = { group = "de.chojo.sadu", name = "sadu-postgresql", version.r
 sadu-sqlite = { group = "de.chojo.sadu", name = "sadu-sqlite", version.ref = "sadu" }
 mariadb-client = { group = "org.mariadb.jdbc", name = "mariadb-java-client", version.ref = "mariadb" }
 
+[bundles]
+sadu = [
+    "sadu-datasource",
+    "sadu-queries",
+    "sadu-sqlite",
+    "sadu-mariadb",
+    "sadu-postgresql"
+]
+
+jackson = [
+    "jackson-toml",
+    "jackson-yaml"
+]
+
+configurate = [
+    "configurate-hocon",
+    "configurate-yaml"
+]
+
+cloud-paper = [
+    "cloud-paper",
+    "cloud-extras",
+    "cloud-confirm"
+]
+
+cloud-velocity = [
+    "cloud-velocity",
+    "cloud-extras",
+    "cloud-confirm"
+]
+
+adventure = [
+    "adventure-api",
+    "adventure-text-minimessage"
+]
+
 [plugins]
+blossom = { id = "net.kyori.blossom", version.ref = "blossom" }
 shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }
 pluginyml = { id = "de.eldoria.plugin-yml.bukkit", version.ref = "pluginyml" }
 run-paper = { id = "xyz.jpenilla.run-paper", version.ref = "run" }
