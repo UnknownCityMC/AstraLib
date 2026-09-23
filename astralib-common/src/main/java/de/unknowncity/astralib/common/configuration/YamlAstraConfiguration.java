@@ -1,15 +1,13 @@
 package de.unknowncity.astralib.common.configuration;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.exc.MismatchedInputException;
-import com.fasterxml.jackson.dataformat.toml.TomlMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator;
-import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
-import com.google.gson.Gson;
 import de.unknowncity.astralib.common.configuration.annotation.Config;
+import tools.jackson.databind.DeserializationFeature;
+import tools.jackson.databind.SerializationFeature;
+import tools.jackson.databind.cfg.DateTimeFeature;
+import tools.jackson.dataformat.yaml.YAMLGenerator;
+import tools.jackson.dataformat.yaml.YAMLMapper;
+import tools.jackson.dataformat.yaml.YAMLReadFeature;
+import tools.jackson.dataformat.yaml.YAMLWriteFeature;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -34,9 +32,10 @@ public abstract class YamlAstraConfiguration {
             return Optional.empty();
         }
 
-        var objectMapper = new YAMLMapper();
-        objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-        objectMapper.findAndRegisterModules();
+        var objectMapper = YAMLMapper.builder()
+                .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+                .findAndAddModules()
+                .build();
 
         try {
             if (Files.readAllBytes(configPath).length == 0) {
@@ -60,9 +59,10 @@ public abstract class YamlAstraConfiguration {
             return Optional.empty();
         }
 
-        var objectMapper = new YAMLMapper();
-        objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-        objectMapper.findAndRegisterModules();
+        var objectMapper = YAMLMapper.builder()
+                .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+                .findAndAddModules()
+                .build();
 
         try {
             if (Files.readAllBytes(configPath).length == 0) {
@@ -107,15 +107,13 @@ public abstract class YamlAstraConfiguration {
             }
         }
 
-        var objectMapper = new YAMLMapper().disable(YAMLGenerator.Feature.WRITE_DOC_START_MARKER);
-        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-        objectMapper.findAndRegisterModules();
+        var objectMapper = YAMLMapper.builder()
+                .disable(YAMLWriteFeature.WRITE_DOC_START_MARKER)
+                .disable(DateTimeFeature.WRITE_DATES_AS_TIMESTAMPS)
+                .findAndAddModules()
+                .build();
 
-        try {
-            objectMapper.writeValue(configPath.toFile(), this);
-        } catch (IOException e) {
-            Logger.getLogger("Configuration").log(Level.SEVERE, "Error while saving configuration file", e);
-        }
+        objectMapper.writeValue(configPath.toFile(), this);
     }
 
     public Path targetFile() {

@@ -2,31 +2,31 @@
 
 # Gradle Plugins
 blossom = "2.2.0"
-shadow = "9.4.2"
+shadow = "9.6.1"
 pluginyml = "0.9.0"
-run = "3.0.2"
+run = "3.1.0"
 
 # Paper
-paper-api = "26.1.2.build.69-stable"
-velocity = "3.5.0-SNAPSHOT"
+paper-api = "26.2.build.+"
+velocity = "4.2.1-SNAPSHOT"
 
 # Config
 configurate = "4.2.0"
-jackson = "2.22.0"
-adventure = "4.26.1"
-papi = "2.12.2"
+jackson = "3.2.2"
+adventure = "5.2.0"
+papi = "2.12.3"
 
 # Commands
-cloud-core = "2.0.0"
-cloud-paper = "2.0.0-beta.15"
-cloud-velocity = "2.0.0-beta.15"
-cloud-minecraft-extras = "2.0.0-beta.15"
+cloud-core = "2.1.0"
+cloud-paper = "2.0.1"
+cloud-velocity = "2.0.1"
+cloud-minecraft-extras = "2.0.1"
 cloud-confirm = "1.0.0-rc.1"
 
 # Storage
 sadu = "2.3.9"
-mariadb = "3.5.8"
-lettuce = "7.6.0.RELEASE"
+mariadb = "3.5.10"
+lettuce = "7.7.0.RELEASE"
 gson = "2.14.0"
 
 [libraries]
@@ -38,8 +38,8 @@ velocity = { group = "com.velocitypowered", name = "velocity-api", version.ref =
 # Config
 configurate-yaml = { group = "org.spongepowered", name = "configurate-yaml", version.ref = "configurate" }
 configurate-hocon = { group = "org.spongepowered", name = "configurate-hocon", version.ref = "configurate" }
-jackson-yaml = { group = "com.fasterxml.jackson.dataformat", name = "jackson-dataformat-yaml", version.ref = "jackson" }
-jackson-toml = { group = "com.fasterxml.jackson.dataformat", name = "jackson-dataformat-toml", version.ref = "jackson" }
+jackson-yaml = { group = "tools.jackson.dataformat", name = "jackson-dataformat-yaml", version.ref = "jackson" }
+jackson-toml = { group = "tools.jackson.dataformat", name = "jackson-dataformat-toml", version.ref = "jackson" }
 gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
 
 adventure-api = { group = "net.kyori", name = "adventure-api", version.ref = "adventure" }
