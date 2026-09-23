@@ -1,0 +1,8 @@
+on:
+  workflow_dispatch: 
+
+jobs:
+  do_nothing:
+    runs-on: ubuntu-latest
+    steps:
+    - run: echo "Only there to make the workflow in the branch show up"
