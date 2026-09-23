@@ -35,13 +35,6 @@ import org.slf4j.Logger;
 
 import java.nio.file.Path;
 
-@Plugin(
-        id = "astralib",
-        name = "AstraLib",
-        version = BuildConstants.VERSION,
-        description = "A super cool plugin utility library",
-        authors = {"UnknownCity"}
-)
 public class AstraLibVelocityPlugin {
 
     private final ProxyServer server;
