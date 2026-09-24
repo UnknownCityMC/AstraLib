@@ -17,6 +17,10 @@ import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * @deprecated since 0.8.2, use ocular by Eldoria instead
+ */
+@Deprecated(since = "0.8.2", forRemoval = true)
 public abstract class YamlAstraConfiguration {
     private Path pluginDataPath;
 
