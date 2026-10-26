@@ -8,7 +8,7 @@ run = "3.0.2"
 
 # Paper
 paper-api = "26.2.build.129-stable"
-velocity = "3.5.0-SNAPSHOT"
+velocity = "4.3.0"
 
 # Config
 configurate = "4.2.0"
