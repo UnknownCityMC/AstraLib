@@ -24,7 +24,7 @@ cloud-minecraft-extras = "2.0.0-beta.15"
 cloud-confirm = "1.0.0-rc.1"
 
 # Storage
-sadu = "2.3.9"
+sadu = "2.4.0"
 mariadb = "3.5.8"
 lettuce = "7.8.0.RELEASE"
 gson = "2.14.0"
