@@ -7,8 +7,8 @@ pluginyml = "0.9.0"
 run = "3.0.2"
 
 # Paper
+velocity = "4.3.2-SNAPSHOT"
 paper-api = "26.3.build.244-stable"
-velocity = "3.5.0-SNAPSHOT"
 
 # Config
 configurate = "4.2.0"
