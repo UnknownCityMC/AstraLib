@@ -2,7 +2,7 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
     id("base")
-    id("pl.allegro.tech.build.axion-release") version "1.21.2"
+    id("pl.allegro.tech.build.axion-release") version "1.21.4"
     id("com.gradleup.shadow")
 }
 
