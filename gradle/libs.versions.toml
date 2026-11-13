@@ -7,8 +7,8 @@ pluginyml = "0.9.0"
 run = "3.0.2"
 
 # Paper
-paper-api = "26.2.build.129-stable"
 velocity = "4.3.2-SNAPSHOT"
+paper-api = "26.3.build.244-stable"
 
 # Config
 configurate = "4.2.0"
@@ -24,7 +24,7 @@ cloud-minecraft-extras = "2.0.0-beta.15"
 cloud-confirm = "1.0.0-rc.1"
 
 # Storage
-sadu = "2.3.9"
+sadu = "2.4.1"
 mariadb = "3.5.8"
 lettuce = "7.8.0.RELEASE"
 gson = "2.14.0"
