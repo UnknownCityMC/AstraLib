@@ -12,6 +12,7 @@ dependencies {
     api(libs.bundles.sadu)
     api(libs.bundles.jackson)
     api(libs.bundles.configurate)
+    api(libs.ocular)
 
     compileOnly(libs.bundles.adventure)
     compileOnly(libs.mariadb.client)
