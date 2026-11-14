@@ -41,7 +41,7 @@ gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
 
 ocular = { module = "dev.chojo:ocular", version.ref = "ocular" }
 jackson-core = { module = "tools.jackson.core:jackson-core", version.ref = "jackson" }
-jackson-yml = { module = "tools.jackson.dataformat :jackson-dataformat-yaml", version.ref = "jackson" }
+jackson-yml = { module = "tools.jackson.dataformat:jackson-dataformat-yaml", version.ref = "jackson" }
 
 adventure-api = { group = "net.kyori", name = "adventure-api", version.ref = "adventure" }
 adventure-text-minimessage = { group = "net.kyori", name = "adventure-text-minimessage", version.ref = "adventure" }
