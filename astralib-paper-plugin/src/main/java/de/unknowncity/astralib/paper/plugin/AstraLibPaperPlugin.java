@@ -18,6 +18,9 @@ import de.unknowncity.astralib.paper.plugin.configuration.AstraLibConfiguration;
 import de.unknowncity.astralib.paper.plugin.database.service.LanguageService;
 import de.unknowncity.astralib.paper.plugin.listener.PlayerJoinListener;
 import de.unknowncity.astralib.paper.plugin.listener.PlayerQuitListener;
+import dev.chojo.ocular.Configurations;
+import dev.chojo.ocular.dataformats.YamlDataFormat;
+import dev.chojo.ocular.key.Key;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -29,7 +32,7 @@ import java.util.logging.Level;
 
 public class AstraLibPaperPlugin extends JavaPlugin {
     private PaperMessenger messenger;
-    private AstraLibConfiguration configuration;
+    private Configurations<AstraLibConfiguration> configuration;
     private LanguageService languageService;
     private PlayerNameService playerNameService;
     private Localization localization;
@@ -51,7 +54,7 @@ public class AstraLibPaperPlugin extends JavaPlugin {
         var platform = new PaperAstraPlatform(this);
 
         try {
-            var redisService = new RedisService(RedisUriBuilder.build(configuration.redis()));
+            var redisService = new RedisService(RedisUriBuilder.build(configuration.main().redis()));
             AstraLib.initialize(platform, redisService);
         } catch (Exception e) {
             getLogger().warning("Failed to connect to Redis, continuing without Redis support: " + e.getMessage());
@@ -84,10 +87,8 @@ public class AstraLibPaperPlugin extends JavaPlugin {
     }
 
     private void initializeConfiguration() {
-        var configOpt = AstraLibConfiguration.loadFromFile(AstraLibConfiguration.class);
-
-        this.configuration = configOpt.orElseGet(AstraLibConfiguration::new);
-        this.configuration.save();
+        var configKey = Key.builder(getDataFolder().toPath().resolve("config.yml"), AstraLibConfiguration::new).build();
+        configuration = Configurations.builder(configKey, new YamlDataFormat()).build();
     }
 
     private void initializeCommands() {
@@ -115,18 +116,18 @@ public class AstraLibPaperPlugin extends JavaPlugin {
                 .withLogger(getLogger())
                 .buildAndLoad();
         return PaperMessenger.builder(localization, getPluginMeta())
-                .withDefaultLanguage(configuration.language().defaultLanguage())
+                .withDefaultLanguage(configuration.main().language().defaultLanguage())
                 .withLanguageService(languageService)
                 .build();
     }
 
     private void initializeDataServices() {
 
-        var databaseSettings = configuration.database();
+        var databaseSettings = configuration.main().database();
 
         var queryConfig = StandardDataBaseProvider.updateAndConnectToDataBase(databaseSettings, getClassLoader(), getDataPath());
 
-        this.languageService = new LanguageService(new SqlLanguageDao(queryConfig), configuration);
+        this.languageService = new LanguageService(new SqlLanguageDao(queryConfig), configuration.main());
         this.playerNameService = new PlayerNameService(new SqlPlayerNameDao(queryConfig));
     }
 

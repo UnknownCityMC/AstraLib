@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import de.unknowncity.astralib.common.platform.AstraLib;
 import io.lettuce.core.RedisClient;
+import io.lettuce.core.SetArgs;
 import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.api.async.RedisAsyncCommands;
 import io.lettuce.core.pubsub.RedisPubSubListener;
@@ -120,7 +121,7 @@ public class RedisService {
 
     public void set(String key, String value, long ttlSeconds) {
         if (ttlSeconds > 0) {
-            asyncCommands.setex(key, ttlSeconds, value);
+            asyncCommands.set(key, value, SetArgs.Builder.ex(ttlSeconds));
         } else {
             asyncCommands.set(key, value);
         }

@@ -2,6 +2,7 @@ plugins {
     id("java")
     alias(libs.plugins.run.velocity)
     id("com.gradleup.shadow")
+    id("astralib-repositories")
     alias(libs.plugins.blossom)
 }
 
@@ -11,6 +12,9 @@ dependencies {
 
     implementation(libs.mariadb.client)
     implementation(libs.gson)
+
+    implementation(libs.bundles.jackson)
+    implementation(libs.ocular)
 
     compileOnly(libs.velocity)
     annotationProcessor(libs.velocity)

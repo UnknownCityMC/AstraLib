@@ -28,6 +28,9 @@ import de.unknowncity.astralib.velocity.plugin.configuration.AstraLibConfigurati
 import de.unknowncity.astralib.velocity.plugin.database.service.LanguageService;
 import de.unknowncity.astralib.velocity.plugin.listener.PlayerDisconnectListener;
 import de.unknowncity.astralib.velocity.plugin.listener.PlayerJoinListener;
+import dev.chojo.ocular.Configurations;
+import dev.chojo.ocular.dataformats.YamlDataFormat;
+import dev.chojo.ocular.key.Key;
 import org.incendo.cloud.SenderMapper;
 import org.incendo.cloud.execution.ExecutionCoordinator;
 import org.incendo.cloud.velocity.VelocityCommandManager;
@@ -42,7 +45,7 @@ public class AstraLibVelocityPlugin {
     private final Path dataDirectory;
     private final PluginContainer pluginContainer;
 
-    private AstraLibConfiguration configuration;
+    private Configurations<AstraLibConfiguration> configuration;
     private LanguageService languageService;
     private PlayerNameService playerNameService;
     private VelocityMessenger messenger;
@@ -71,7 +74,7 @@ public class AstraLibVelocityPlugin {
         var platform = new VelocityAstraPlatform(this, server);
 
         try {
-            this.redisService = new RedisService(RedisUriBuilder.build(configuration.redis()));
+            this.redisService = new RedisService(RedisUriBuilder.build(configuration.main().redis()));
             AstraLib.initialize(platform, redisService);
         } catch (Exception e) {
             logger.warn("Failed to connect to Redis, continuing without Redis support: {}", e.getMessage());
@@ -91,11 +94,8 @@ public class AstraLibVelocityPlugin {
     }
 
     private void initializeConfiguration() {
-        var configOpt = AstraLibConfiguration.loadFromFile(AstraLibConfiguration.class, dataDirectory);
-
-        this.configuration = configOpt.orElseGet(AstraLibConfiguration::new);
-        this.configuration.pluginDataPath(dataDirectory);
-        this.configuration.save();
+        var configKey = Key.builder(Path.of("config.yml"), AstraLibConfiguration::new).build();
+        configuration = Configurations.builder(configKey, new YamlDataFormat()).build();
     }
 
     private void initializeCommands() {
@@ -116,11 +116,11 @@ public class AstraLibVelocityPlugin {
     }
 
     private void initializeDataServices() {
-        var databaseSettings = configuration.database();
+        var databaseSettings = configuration.main().database();
 
         var queryConfig = StandardDataBaseProvider.updateAndConnectToDataBase(databaseSettings, getClass().getClassLoader(), dataDirectory);
 
-        this.languageService = new LanguageService(new SqlLanguageDao(queryConfig), configuration);
+        this.languageService = new LanguageService(new SqlLanguageDao(queryConfig), configuration.main());
         this.playerNameService = new PlayerNameService(new SqlPlayerNameDao(queryConfig));
     }
 
@@ -133,7 +133,7 @@ public class AstraLibVelocityPlugin {
                 .withLogger(resourceLogger)
                 .buildAndLoad();
         return VelocityMessenger.builder(localization, pluginContainer.getDescription(), server)
-                .withDefaultLanguage(configuration.language().defaultLanguage())
+                .withDefaultLanguage(configuration.main().language().defaultLanguage())
                 .withLanguageService(languageService)
                 .build();
     }

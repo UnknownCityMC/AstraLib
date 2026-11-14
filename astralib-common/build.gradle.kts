@@ -1,6 +1,7 @@
 plugins {
     id("java-library")
     id("astralib-publishing")
+    id("astralib-repositories")
 }
 
 dependencies {
@@ -9,7 +10,6 @@ dependencies {
     api(libs.gson)
     api(libs.lettuce)
     api(libs.bundles.sadu)
-    api(libs.bundles.jackson)
     api(libs.bundles.configurate)
 
     compileOnly(libs.bundles.adventure)
@@ -18,8 +18,6 @@ dependencies {
     testImplementation(platform("org.junit:junit-bom:6.1.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-
-    testCompileOnly(libs.jackson.yaml)
 }
 
 tasks {
