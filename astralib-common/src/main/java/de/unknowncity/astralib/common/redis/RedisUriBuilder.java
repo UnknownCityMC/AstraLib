@@ -1,6 +1,6 @@
 package de.unknowncity.astralib.common.redis;
 
-import de.unknowncity.astralib.common.configuration.setting.defaults.RedisSetting;
+import de.unknowncity.astralib.common.config.RedisSettings;
 
 public class RedisUriBuilder {
 
@@ -32,7 +32,7 @@ public class RedisUriBuilder {
         return sb.toString();
     }
 
-    public static String build(RedisSetting redisSetting) {
-        return build(redisSetting.host(), redisSetting.port(), redisSetting.username(), redisSetting.password(), redisSetting.ssl());
+    public static String build(RedisSettings settings) {
+        return build(settings.host(), settings.port(), settings.user(), settings.password(), settings.ssl());
     }
 }

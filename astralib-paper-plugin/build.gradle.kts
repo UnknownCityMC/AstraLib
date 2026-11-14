@@ -22,9 +22,9 @@ dependencies {
     bukkitLibrary(libs.lettuce)
     bukkitLibrary(libs.gson)
 
-    implementation(libs.bundles.jackson)
-
     bukkitLibrary(libs.bundles.sadu)
+    bukkitLibrary(libs.bundles.jackson)
+    bukkitLibrary(libs.ocular)
 
     compileOnly(libs.bundles.adventure)
 

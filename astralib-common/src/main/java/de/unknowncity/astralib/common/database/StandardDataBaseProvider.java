@@ -7,7 +7,7 @@ import de.chojo.sadu.postgresql.databases.PostgreSql;
 import de.chojo.sadu.queries.api.configuration.QueryConfiguration;
 import de.chojo.sadu.sqlite.databases.SqLite;
 import de.chojo.sadu.updater.SqlUpdater;
-import de.unknowncity.astralib.common.configuration.setting.defaults.ModernDataBaseSetting;
+import de.unknowncity.astralib.common.config.DatabaseSettings;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -24,11 +24,11 @@ public class StandardDataBaseProvider {
                 .build();
     }
 
-    public static QueryConfiguration updateAndConnectToDataBase(ModernDataBaseSetting dataBaseSetting, ClassLoader classLoader, Path pluginDataPath) {
-        var dataSource = createDataSource(dataBaseSetting, pluginDataPath);
+    public static QueryConfiguration updateAndConnectToDataBase(DatabaseSettings settings, ClassLoader classLoader, Path pluginDataPath) {
+        var dataSource = createDataSource(settings, pluginDataPath);
         var config = setup(dataSource);
         try {
-            update(dataBaseSetting.dataBaseDriver(), dataSource, classLoader);
+            update(settings.driver(), dataSource, classLoader);
         } catch (SQLException | IOException e) {
             Logger.getLogger("DataBaseProvider").log(Level.SEVERE, "An error occurred during a database request", e);
         }
@@ -54,48 +54,48 @@ public class StandardDataBaseProvider {
         }
     }
 
-    private static HikariDataSource createDataSource(ModernDataBaseSetting dataBaseSetting, Path pluginDataPath) {
-        switch (dataBaseSetting.dataBaseDriver()) {
+    private static HikariDataSource createDataSource(DatabaseSettings settings, Path pluginDataPath) {
+        switch (settings.driver()) {
             case MARIADB -> {
                 return DataSourceCreator.create(MariaDb.get())
                         .configure(config -> config
-                                .port(dataBaseSetting.port())
-                                .user(dataBaseSetting.username())
-                                .password(dataBaseSetting.password())
-                                .database(dataBaseSetting.database())
-                                .host(dataBaseSetting.host())
+                                .port(settings.port())
+                                .user(settings.username())
+                                .password(settings.password())
+                                .database(settings.database())
+                                .host(settings.host())
                                 .driverClass(org.mariadb.jdbc.Driver.class)
                         )
                         .create()
-                        .withMaximumPoolSize(dataBaseSetting.maxPoolSize())
-                        .withMinimumIdle(dataBaseSetting.minIdleConnections())
+                        .withMaximumPoolSize(settings.maxPoolSize())
+                        .withMinimumIdle(settings.minIdleConnections())
                         .build();
             }
 
             case POSTGRESQL -> {
                 return DataSourceCreator.create(PostgreSql.get())
                         .configure(config -> config
-                                .port(dataBaseSetting.port())
-                                .user(dataBaseSetting.username())
-                                .password(dataBaseSetting.password())
-                                .database(dataBaseSetting.database())
-                                .host(dataBaseSetting.host())
+                                .port(settings.port())
+                                .user(settings.username())
+                                .password(settings.password())
+                                .database(settings.database())
+                                .host(settings.host())
                                 .driverClass(Driver.class)
                         )
                         .create()
-                        .withMaximumPoolSize(dataBaseSetting.maxPoolSize())
-                        .withMinimumIdle(dataBaseSetting.minIdleConnections())
+                        .withMaximumPoolSize(settings.maxPoolSize())
+                        .withMinimumIdle(settings.minIdleConnections())
                         .build();
             }
             default -> {
                 return DataSourceCreator.create(SqLite.get())
                         .configure(config -> config
-                                .path(pluginDataPath.resolve(dataBaseSetting.sqliteDataBasePath()))
+                                .path(pluginDataPath.resolve(Path.of(settings.host())))
                                 .driverClass(Driver.class)
                         )
                         .create()
-                        .withMaximumPoolSize(dataBaseSetting.maxPoolSize())
-                        .withMinimumIdle(dataBaseSetting.minIdleConnections())
+                        .withMaximumPoolSize(settings.maxPoolSize())
+                        .withMinimumIdle(settings.minIdleConnections())
                         .build();
             }
         }

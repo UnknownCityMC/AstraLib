@@ -8,19 +8,18 @@ run = "3.0.2"
 
 # Paper
 velocity = "4.3.2-SNAPSHOT"
-paper-api = "26.3.build.244-stable"
+paper-api = "26.3.build.+"
 
 # Config
 configurate = "4.2.0"
-jackson = "2.22.0"
+ocular = "2.4.1"
+jackson = "3.2.4"
 adventure = "4.26.1"
 papi = "2.12.2"
 
 # Commands
-cloud-core = "2.0.0"
-cloud-velocity = "2.0.2-SNAPSHOT"
-cloud-paper = "2.0.2-SNAPSHOT"
-cloud-minecraft-extras = "2.0.2-SNAPSHOT"
+cloud-core = "2.1.0"
+cloud-minecraft = "2.0.1"
 cloud-confirm = "1.0.0-rc.1"
 
 # Storage
@@ -38,9 +37,11 @@ velocity = { group = "com.velocitypowered", name = "velocity-api", version.ref =
 # Config
 configurate-yaml = { group = "org.spongepowered", name = "configurate-yaml", version.ref = "configurate" }
 configurate-hocon = { group = "org.spongepowered", name = "configurate-hocon", version.ref = "configurate" }
-jackson-yaml = { group = "com.fasterxml.jackson.dataformat", name = "jackson-dataformat-yaml", version.ref = "jackson" }
-jackson-toml = { group = "com.fasterxml.jackson.dataformat", name = "jackson-dataformat-toml", version.ref = "jackson" }
 gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
+
+ocular = { module = "dev.chojo:ocular", version.ref = "ocular" }
+jackson-core = { module = "tools.jackson.core:jackson-core", version.ref = "jackson" }
+jackson-yml = { module = "tools.jackson.dataformat :jackson-dataformat-yaml", version.ref = "jackson" }
 
 adventure-api = { group = "net.kyori", name = "adventure-api", version.ref = "adventure" }
 adventure-text-minimessage = { group = "net.kyori", name = "adventure-text-minimessage", version.ref = "adventure" }
@@ -48,10 +49,10 @@ papi = { group = "me.clip", name = "placeholderapi", version.ref = "papi" }
 
 # Commands
 cloud-core = { group = "org.incendo", name = "cloud-core", version.ref = "cloud-core" }
-cloud-paper = { group = "org.incendo", name = "cloud-paper", version.ref = "cloud-paper" }
-cloud-velocity = { group = "org.incendo", name = "cloud-velocity", version.ref = "cloud-velocity" }
+cloud-paper = { group = "org.incendo", name = "cloud-paper", version.ref = "cloud-minecraft" }
+cloud-velocity = { group = "org.incendo", name = "cloud-velocity", version.ref = "cloud-minecraft" }
+cloud-extras = { group = "org.incendo", name = "cloud-minecraft-extras", version.ref = "cloud-minecraft" }
 cloud-confirm = { group = "org.incendo", name = "cloud-processors-confirmation", version.ref = "cloud-confirm" }
-cloud-extras = { group = "org.incendo", name = "cloud-minecraft-extras", version.ref = "cloud-minecraft-extras" }
 
 # Storage
 lettuce = { group = "io.lettuce", name = "lettuce-core", version.ref = "lettuce" }
@@ -69,11 +70,6 @@ sadu = [
     "sadu-sqlite",
     "sadu-mariadb",
     "sadu-postgresql"
-]
-
-jackson = [
-    "jackson-toml",
-    "jackson-yaml"
 ]
 
 configurate = [
@@ -98,10 +94,14 @@ adventure = [
     "adventure-text-minimessage"
 ]
 
+jackson = [
+    "jackson-core",
+    "jackson-yml"
+]
+
 [plugins]
 blossom = { id = "net.kyori.blossom", version.ref = "blossom" }
 shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }
 pluginyml = { id = "de.eldoria.plugin-yml.bukkit", version.ref = "pluginyml" }
 run-paper = { id = "xyz.jpenilla.run-paper", version.ref = "run" }
 run-velocity = { id = "xyz.jpenilla.run-velocity", version.ref = "run" }
-

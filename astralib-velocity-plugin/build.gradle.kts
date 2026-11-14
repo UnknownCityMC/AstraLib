@@ -12,6 +12,9 @@ dependencies {
     implementation(libs.mariadb.client)
     implementation(libs.gson)
 
+    implementation(libs.bundles.jackson)
+    implementation(libs.ocular)
+
     compileOnly(libs.velocity)
     annotationProcessor(libs.velocity)
 }
