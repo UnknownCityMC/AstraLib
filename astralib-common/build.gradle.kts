@@ -1,6 +1,7 @@
 plugins {
     id("java-library")
     id("astralib-publishing")
+    id("astralib-repositories")
 }
 
 dependencies {

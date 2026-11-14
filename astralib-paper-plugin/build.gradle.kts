@@ -5,26 +5,36 @@ plugins {
     alias(libs.plugins.pluginyml)
     alias(libs.plugins.run.paper)
     id("com.gradleup.shadow")
+    id("astralib-repositories")
 }
 
 val mainClass = "${rootProject.group}.paper.plugin.AstraLibPaperPlugin"
 
+repositories {
+    maven {
+        name = "central-snapshots"
+        url = uri("https://central.sonatype.com/repository/maven-snapshots/")
+    }
+}
+
 dependencies {
-    implementation(project(":astralib-common"))
+    implementation(project(":astralib-common")) {
+        exclude(group = "*", module = "*")
+    }
     implementation(project(":astralib-paper-api")) {
         exclude(group = "*", module = "*")
     }
 
-    bukkitLibrary(libs.bundles.cloud.paper)
+    paperLibrary(libs.bundles.cloud.paper)
 
-    bukkitLibrary(libs.bundles.configurate)
+    paperLibrary(libs.bundles.configurate)
 
-    bukkitLibrary(libs.lettuce)
-    bukkitLibrary(libs.gson)
+    paperLibrary(libs.lettuce)
+    paperLibrary(libs.gson)
 
-    bukkitLibrary(libs.bundles.sadu)
-    bukkitLibrary(libs.bundles.jackson)
-    bukkitLibrary(libs.ocular)
+    paperLibrary(libs.bundles.sadu)
+    paperLibrary(libs.bundles.jackson)
+    paperLibrary(libs.ocular)
 
     compileOnly(libs.bundles.adventure)
 
@@ -32,8 +42,7 @@ dependencies {
     compileOnly(libs.paper.api)
 }
 
-bukkit {
-
+paper {
     name = "AstraLib"
     version = "${rootProject.version}"
     description = "A super cool plugin utility library"
@@ -41,14 +50,21 @@ bukkit {
     author = "UnknownCity"
 
     main = mainClass
+    loader = "${rootProject.group}.paper.plugin.PluginLibrariesLoader"
 
     foliaSupported = false
 
-    apiVersion = "1.21"
+    apiVersion = "26.3"
+
+    generateLibrariesJson = true
 
     load = BukkitPluginDescription.PluginLoadOrder.POSTWORLD
 
-    softDepend = listOf("PlaceholderAPI")
+    serverDependencies  {
+        register("PlaceholderAPI") {
+            required = false
+        }
+    }
 
     defaultPermission = BukkitPluginDescription.Permission.Default.OP
 }
@@ -62,12 +78,16 @@ tasks {
         dependsOn(":astralib-paper-api:build")
         archiveVersion.set(rootProject.version.toString())
         archiveBaseName.set("AstraLib-Paper")
+    }
 
-        relocateDependency("com.fasterxml")
+    generatePaperPluginDescription {
+        useDefaultCentralProxy()
+        // PlaceholderAPI is a server plugin, not a runtime library repository
+        repos.set(repos.get() - "placeholderapi")
     }
 
     runServer {
-        minecraftVersion("26.1.2")
+        minecraftVersion("26.3")
         jvmArgs("-Dcom.mojang.eula.agree=true")
     }
 }

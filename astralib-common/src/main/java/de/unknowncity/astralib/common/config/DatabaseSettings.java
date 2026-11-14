@@ -41,6 +41,11 @@ public class DatabaseSettings {
         this.password = password;
     }
 
+    public DatabaseSettings(DatabaseDriver driver, String host) {
+        this.driver = driver;
+        this.host = host;
+    }
+
     public DatabaseDriver driver() {
         return driver;
     }

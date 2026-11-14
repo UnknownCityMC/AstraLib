@@ -87,7 +87,7 @@ public class AstraLibPaperPlugin extends JavaPlugin {
     }
 
     private void initializeConfiguration() {
-        var configKey = Key.builder(Path.of("config.yml"), AstraLibConfiguration::new).build();
+        var configKey = Key.builder(getDataFolder().toPath().resolve("config.yml"), AstraLibConfiguration::new).build();
         configuration = Configurations.builder(configKey, new YamlDataFormat()).build();
     }
 

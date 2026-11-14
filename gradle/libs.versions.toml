@@ -4,7 +4,7 @@
 blossom = "2.2.0"
 shadow = "9.4.2"
 pluginyml = "0.9.0"
-run = "3.0.2"
+run = "3.1.0"
 
 # Paper
 velocity = "4.3.2-SNAPSHOT"
@@ -19,7 +19,7 @@ papi = "2.12.2"
 
 # Commands
 cloud-core = "2.1.0"
-cloud-minecraft = "2.0.1"
+cloud-minecraft = "2.0.2-SNAPSHOT"
 cloud-confirm = "1.0.0-rc.1"
 
 # Storage
@@ -102,6 +102,6 @@ jackson = [
 [plugins]
 blossom = { id = "net.kyori.blossom", version.ref = "blossom" }
 shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }
-pluginyml = { id = "de.eldoria.plugin-yml.bukkit", version.ref = "pluginyml" }
+pluginyml = { id = "de.eldoria.plugin-yml.paper", version.ref = "pluginyml" }
 run-paper = { id = "xyz.jpenilla.run-paper", version.ref = "run" }
 run-velocity = { id = "xyz.jpenilla.run-velocity", version.ref = "run" }
