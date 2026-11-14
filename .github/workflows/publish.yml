@@ -51,3 +51,38 @@ jobs:
         env:
           MVN_REPO_USERNAME: ${{ secrets.MVN_REPO_USERNAME }}
           MVN_REPO_PASSWORD: ${{ secrets.MVN_REPO_PASSWORD }}
+
+      - name: Build Plugin Jars
+        if: github.event_name == 'release'
+        run: ./gradlew :astralib-paper-plugin:shadowJar :astralib-velocity-plugin:shadowJar -PpublishVersion=${{ steps.version.outputs.version }}
+
+      - name: Upload Plugin Jars
+        if: github.event_name == 'release'
+        uses: actions/upload-artifact@v7
+        with:
+          name: plugin-jars
+          path: |
+            astralib-paper-plugin/build/libs/*.jar
+            astralib-velocity-plugin/build/libs/*.jar
+          if-no-files-found: error
+
+  attach-release-assets:
+    needs: publish
+    if: github.event_name == 'release'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Download Plugin Jars
+        uses: actions/download-artifact@v8
+        with:
+          name: plugin-jars
+          path: plugin-jars
+
+      - name: Attach Plugin Jars to Release
+        run: |
+          shopt -s globstar
+          gh release upload "${{ github.event.release.tag_name }}" plugin-jars/**/*.jar --clobber --repo "$GITHUB_REPOSITORY"
+        env:
+          GH_TOKEN: ${{ github.token }}
