@@ -7,7 +7,9 @@ plugins {
 }
 
 group = "de.unknowncity.astralib"
-version = scmVersion.version
+
+// CI passes the version explicitly (e.g. 0.9.0-SNAPSHOT for version/0.9.0), local builds fall back to axion
+version = providers.gradleProperty("publishVersion").orNull ?: scmVersion.version
 
 scmVersion {
     tag {
