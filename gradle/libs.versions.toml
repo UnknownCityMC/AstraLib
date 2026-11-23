@@ -25,7 +25,7 @@ cloud-confirm = "1.0.0-rc.1"
 # Storage
 lettuce = "7.9.0.RELEASE"
 mariadb = "4.0.0"
-sadu = "2.4.1"
+sadu = "2.4.2"
 gson = "2.15.0"
 
 [libraries]
